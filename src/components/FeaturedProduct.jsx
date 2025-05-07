@@ -119,7 +119,7 @@ const FeaturedProduct = () => {
                   {product.category}
                 </span>
                 <h3 className="font-medium text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                  <a href="#">{product.name}</a>
+                  <Link to={`/products/${product.id}`}>{product.name}</Link>
                 </h3>
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <Star size={16} className="text-yellow-400 fill-current" />

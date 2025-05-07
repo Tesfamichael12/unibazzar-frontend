@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile, verifyToken } from "./redux/slices/authSlice";
 import ThemeToggle from "./components/ui/ThemeToggle";
 import ThankYou from "./pages/ThankYou";
+import ProductDetail from "./pages/ProductDetail";
 
 // Import profile form components
 import StudentProfileForm from "./pages/profile/forms/StudentProfileForm";
@@ -116,6 +117,7 @@ function AppContent() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="/thank-you" element={<ThankYou />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
 
           {/* Password Reset Routes */}
           <Route path="/forgot-password" element={<PasswordResetPage />} />

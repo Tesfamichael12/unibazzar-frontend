@@ -24,6 +24,29 @@ const MarketplacePage = () => {
   const [error, setError] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
+  // Pagination state for each product type
+  const [merchantPagination, setMerchantPagination] = useState({
+    count: 0,
+    next: null,
+    previous: null,
+    currentPage: 1,
+    pageSize: 10,
+  });
+  const [studentPagination, setStudentPagination] = useState({
+    count: 0,
+    next: null,
+    previous: null,
+    currentPage: 1,
+    pageSize: 10,
+  });
+  const [tutorPagination, setTutorPagination] = useState({
+    count: 0,
+    next: null,
+    previous: null,
+    currentPage: 1,
+    pageSize: 10,
+  });
+
   const dispatch = useDispatch();
 
   // Replace with your actual auth token logic
@@ -45,53 +68,65 @@ const MarketplacePage = () => {
     return res.json();
   };
 
+  // Helper to fetch paginated data
+  const fetchPaginated = async (url, setProducts, setPagination) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await safeFetch(url);
+      setProducts(Array.isArray(data.results) ? data.results : []);
+      setPagination({
+        count: data.count,
+        next: data.next,
+        previous: data.previous,
+        currentPage: getPageFromUrl(url),
+        pageSize: 10, // or parse from backend if dynamic
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Helper to extract page number from URL
+  function getPageFromUrl(url) {
+    const match = url.match(/page=(\d+)/);
+    return match ? parseInt(match[1], 10) : 1;
+  }
+
   // Fetch all product types and categories on mount
   useEffect(() => {
     if (!getAuthToken()) {
       navigate("/login");
       return;
     }
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const [merchantData, studentData, tutorData, categoriesData] =
-          await Promise.all([
-            safeFetch(`http://localhost:8000/api/products/merchant-products/`),
-            safeFetch(`http://localhost:8000/api/products/student-products/`),
-            safeFetch(`http://localhost:8000/api/products/tutor-services/`),
-            safeFetch(`http://localhost:8000/api/products/categories/`),
-          ]);
-        setMerchantProducts(
-          Array.isArray(merchantData.results) ? merchantData.results : []
+    fetchPaginated(
+      `${API_BASE}/merchant-products/`,
+      setMerchantProducts,
+      setMerchantPagination
+    );
+    fetchPaginated(
+      `${API_BASE}/student-products/`,
+      setStudentProducts,
+      setStudentPagination
+    );
+    fetchPaginated(
+      `${API_BASE}/tutor-services/`,
+      setTutorServices,
+      setTutorPagination
+    );
+    safeFetch(`${API_BASE}/categories/`).then((categoriesData) => {
+      setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+      if (categoryParam) {
+        const category = (
+          Array.isArray(categoriesData) ? categoriesData : []
+        ).find(
+          (c) => c.name && c.name.toLowerCase() === categoryParam.toLowerCase()
         );
-        setStudentProducts(
-          Array.isArray(studentData.results) ? studentData.results : []
-        );
-        setTutorServices(
-          Array.isArray(tutorData.results) ? tutorData.results : []
-        );
-        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
-        // If category is provided in URL, select it
-        if (categoryParam) {
-          const category = (
-            Array.isArray(categoriesData) ? categoriesData : []
-          ).find(
-            (c) =>
-              c.name && c.name.toLowerCase() === categoryParam.toLowerCase()
-          );
-          if (category) {
-            setSelectedCategory(category.id);
-          }
-        }
-      } catch (err) {
-        setError(err.message);
-        setCategories([]); // Ensure categories is always an array
-      } finally {
-        setLoading(false);
+        if (category) setSelectedCategory(category.id);
       }
-    };
-    fetchData();
+    });
     // eslint-disable-next-line
   }, [categoryParam]);
 
@@ -146,6 +181,29 @@ const MarketplacePage = () => {
 
   // Handle error clear
   const clearError = () => setError(null);
+
+  // Pagination handlers
+  const handleMerchantPageChange = (page) => {
+    const url =
+      page === 1
+        ? `${API_BASE}/merchant-products/`
+        : `${API_BASE}/merchant-products/?page=${page}`;
+    fetchPaginated(url, setMerchantProducts, setMerchantPagination);
+  };
+  const handleStudentPageChange = (page) => {
+    const url =
+      page === 1
+        ? `${API_BASE}/student-products/`
+        : `${API_BASE}/student-products/?page=${page}`;
+    fetchPaginated(url, setStudentProducts, setStudentPagination);
+  };
+  const handleTutorPageChange = (page) => {
+    const url =
+      page === 1
+        ? `${API_BASE}/tutor-services/`
+        : `${API_BASE}/tutor-services/?page=${page}`;
+    fetchPaginated(url, setTutorServices, setTutorPagination);
+  };
 
   // Build category filter buttons (including static types)
   const staticCategories = [
@@ -245,6 +303,27 @@ const MarketplacePage = () => {
         error={error}
         onAddToCart={handleAddToCart}
         onClearError={clearError}
+        paginationProps={(() => {
+          if (activeTab === "merchant") {
+            return {
+              ...merchantPagination,
+              onPageChange: handleMerchantPageChange,
+            };
+          } else if (activeTab === "student") {
+            return {
+              ...studentPagination,
+              onPageChange: handleStudentPageChange,
+            };
+          } else if (activeTab === "tutor") {
+            return {
+              ...tutorPagination,
+              onPageChange: handleTutorPageChange,
+            };
+          } else {
+            // For 'all', show no pagination or implement combined pagination if needed
+            return null;
+          }
+        })()}
       />
     </div>
   );
