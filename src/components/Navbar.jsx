@@ -118,7 +118,7 @@ export default function Navbar() {
           {/* Logo with animation */}
           <Link to="/" className="flex items-center gap-2 group">
             <motion.img
-              src="assets/unibazzar_log.webp"
+              src="/assets/unibazzar_log.webp"
               alt="UniBazzar Logo"
               className="w-10 drop-shadow-lg rounded-full p-1 border border-blue-200 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300"
               initial={{ scale: 0.8, opacity: 0, rotate: -10 }}

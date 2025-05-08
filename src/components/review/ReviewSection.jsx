@@ -23,6 +23,13 @@ const ReviewSection = ({ type, objectId }) => {
 
   const contentTypeId = CONTENT_TYPE_MAP[type];
 
+  // Extra validation: warn if contentTypeId or objectId is missing or invalid
+  useEffect(() => {
+    if (!contentTypeId || !objectId) {
+      // Removed console.warn statement
+    }
+  }, [contentTypeId, objectId, type]);
+
   // Fetch reviews for this product/service
   useEffect(() => {
     if (!contentTypeId || !objectId) return;
@@ -46,15 +53,18 @@ const ReviewSection = ({ type, objectId }) => {
       });
   }, [contentTypeId, objectId, token]);
 
+  // Debug: log fetch URL and filtering
+  useEffect(() => {
+    if (contentTypeId && objectId) {
+      const url = `${API_BASE}/api/products/reviews/?content_type=${contentTypeId}&object_id=${objectId}`;
+      // Removed console.log statement
+    }
+  }, [contentTypeId, objectId]);
+
   // Debug: log what is being sent on submit
   useEffect(() => {
     if (submitting) {
-      console.log("Review submit payload:", {
-        content_type: contentTypeId,
-        object_id: objectId,
-        rating: Number(form.rating),
-        comment: form.comment.trim(),
-      });
+      // Removed console.log statement
     }
   }, [submitting]);
 
@@ -159,6 +169,12 @@ const ReviewSection = ({ type, objectId }) => {
       {success && (
         <div className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded mb-4">
           {success}
+        </div>
+      )}
+      {(!contentTypeId || !objectId) && (
+        <div className="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-4 py-2 rounded mb-4">
+          Warning: Review system misconfigured. Please check product type and
+          ID.
         </div>
       )}
       {!loading && !error && (

@@ -9,7 +9,6 @@ import { FiShoppingCart, FiArrowLeft, FiPhone } from "react-icons/fi";
 const ProductDetail = () => {
   const { type: rawType, id } = useParams();
   const type = rawType || "merchant";
-  console.log("ProductDetail type param:", type, "id:", id);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
