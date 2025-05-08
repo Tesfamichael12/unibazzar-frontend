@@ -120,7 +120,7 @@ const ProductDetail = () => {
               </div>
               <div className="flex items-center gap-6 mb-6">
                 <span className="text-3xl font-bold text-blue-700 dark:text-blue-300">
-                  ETB {product.price}
+                  {product.price} ETB
                 </span>
                 <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                   <FiPhone className="w-4 h-4 text-blue-400" />

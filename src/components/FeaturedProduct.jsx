@@ -67,7 +67,12 @@ const FeaturedProduct = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product) => (
-            <div key={product.id} className="group">
+            <Link
+              key={product.id}
+              to="/listings"
+              className="group block h-full"
+              style={{ textDecoration: 'none' }}
+            >
               <div className="relative overflow-hidden rounded-xl aspect-square mb-4 bg-white dark:bg-gray-800 flex items-center justify-center">
                 {product.isNew && (
                   <span className="absolute top-3 left-3 z-10 bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded">
@@ -75,10 +80,8 @@ const FeaturedProduct = () => {
                   </span>
                 )}
                 <button
-                  onClick={() => dispatch(toggleFavorite(product.id))}
-                  className={`absolute top-3 right-3 z-10 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer ${
-                    isFavorite(product.id) ? "text-red-500 opacity-100" : ""
-                  }`}
+                  onClick={e => { e.preventDefault(); e.stopPropagation(); dispatch(toggleFavorite(product.id)); }}
+                  className={`absolute top-3 right-3 z-10 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer ${isFavorite(product.id) ? "text-red-500 opacity-100" : ""}`}
                   type="button"
                   aria-label="Mark as Read Later"
                 >
@@ -97,16 +100,7 @@ const FeaturedProduct = () => {
                 <div className="absolute inset-x-0 bottom-0 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 py-3 px-4 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
                   <button
                     className="w-full flex items-center justify-center space-x-2 bg-gray-900 dark:bg-blue-700 hover:bg-black dark:hover:bg-blue-800 text-white py-2 rounded-lg font-medium transition-colors cursor-pointer"
-                    onClick={() =>
-                      dispatch(
-                        addToCart({
-                          id: product.id,
-                          title: product.name,
-                          price: product.price,
-                          imageUrl: product.image,
-                        })
-                      )
-                    }
+                    onClick={e => { e.preventDefault(); e.stopPropagation(); dispatch(addToCart({ id: product.id, title: product.name, price: product.price, imageUrl: product.image })); }}
                   >
                     <ShoppingBag size={18} />
                     <span>Add to Cart</span>
@@ -119,7 +113,7 @@ const FeaturedProduct = () => {
                   {product.category}
                 </span>
                 <h3 className="font-medium text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                  <Link to={`/products/${product.id}`}>{product.name}</Link>
+                  {product.name}
                 </h3>
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <Star size={16} className="text-yellow-400 fill-current" />
@@ -128,10 +122,10 @@ const FeaturedProduct = () => {
                   </span>
                 </div>
                 <span className="font-semibold text-gray-900 dark:text-white">
-                  ETB {product.price.toFixed(2)}
+                  {product.price.toFixed(2)} ETB
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

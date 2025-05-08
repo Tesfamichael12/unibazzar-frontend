@@ -23,7 +23,6 @@ api.interceptors.request.use(
       const token = state.auth.token;
 
       if (token) {
-        console.log(`Adding auth token to ${config.url}`);
         config.headers.Authorization = `Bearer ${token}`;
       } else {
         console.warn(`No auth token available for request to ${config.url}`);
@@ -79,8 +78,6 @@ api.interceptors.response.use(
           throw new Error("No refresh token available");
         }
 
-        console.log("Attempting to refresh token");
-
         // Attempt to refresh the token
         const response = await axios.post(
           "http://localhost:8000/api/token/refresh/",
@@ -103,8 +100,6 @@ api.interceptors.response.use(
         }
 
         const { access } = response.data;
-
-        console.log("Token refresh successful");
 
         // Update the token in the store
         storeInstance.dispatch({

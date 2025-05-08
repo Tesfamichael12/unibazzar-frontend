@@ -67,7 +67,6 @@ function AppContent() {
     if (isAuthenticated) {
       // Verify token and fetch user profile
       dispatch(verifyToken());
-      console.log("App initialized, fetching user profile");
       dispatch(fetchUserProfile());
     }
   }, [isAuthenticated, dispatch]);

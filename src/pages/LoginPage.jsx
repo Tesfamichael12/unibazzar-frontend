@@ -15,56 +15,35 @@ import api from "../redux/api/uniBazzarApi"; // Import the API client
 const checkMerchantProfile = async (userId) => {
   // Using the correct endpoint format with a query parameter
   const url = `/api/users/merchant-profiles/?user=${userId}`;
-  console.log(`[checkMerchantProfile] Fetching: ${url}`);
   try {
     // Use the api client that has proper auth and base URL configuration
     const response = await api.get(url);
 
-    console.log(
-      `[checkMerchantProfile] Response Status: ${response.status}, OK: ${
-        response.status >= 200 && response.status < 300
-      }`
-    );
-
     // For API client, we need to check the response data directly
     if (response.status >= 200 && response.status < 300) {
       const data = response.data;
-      console.log(`[checkMerchantProfile] Profile data:`, data);
 
       // If the response is an array and has at least one item, the profile exists
       if (Array.isArray(data) && data.length > 0) {
-        console.log(
-          `[checkMerchantProfile] Profile exists for user ${userId}. Returning true.`
-        );
         return true;
       }
 
       // If the response has results and there are items, the profile exists (paginated response)
       if (data && data.results && data.results.length > 0) {
-        console.log(
-          `[checkMerchantProfile] Profile exists for user ${userId}. Returning true.`
-        );
         return true;
       }
 
       // Otherwise, even though the request succeeded, no profile data exists
-      console.log(
-        `[checkMerchantProfile] No profile data found for user ${userId}. Returning false.`
-      );
       return false;
     }
 
     if (response.status === 404) {
-      console.log(
-        `[checkMerchantProfile] Profile does not exist (Status: ${response.status}). Returning false.`
-      );
       return false; // Profile does not exist
     }
 
     // Handle other non-OK statuses as errors
     throw new Error(`HTTP error! status: ${response.status}`);
   } catch (error) {
-    console.error("[checkMerchantProfile] Error:", error);
     // Check error response
     if (error.response && error.response.status === 404) {
       return false; // API client will throw for 404, but we want to handle it as "no profile"
@@ -77,56 +56,35 @@ const checkMerchantProfile = async (userId) => {
 const checkStudentProfile = async (userId) => {
   // Using the correct endpoint format with a query parameter
   const url = `/api/users/student-profiles/?user=${userId}`;
-  console.log(`[checkStudentProfile] Fetching: ${url}`);
   try {
     // Use the api client that has proper auth and base URL configuration
     const response = await api.get(url);
 
-    console.log(
-      `[checkStudentProfile] Response Status: ${response.status}, OK: ${
-        response.status >= 200 && response.status < 300
-      }`
-    );
-
     // For API client, we need to check the response data directly
     if (response.status >= 200 && response.status < 300) {
       const data = response.data;
-      console.log(`[checkStudentProfile] Profile data:`, data);
 
       // If the response is an array and has at least one item, the profile exists
       if (Array.isArray(data) && data.length > 0) {
-        console.log(
-          `[checkStudentProfile] Profile exists for user ${userId}. Returning true.`
-        );
         return true;
       }
 
       // If the response has results and there are items, the profile exists (paginated response)
       if (data && data.results && data.results.length > 0) {
-        console.log(
-          `[checkStudentProfile] Profile exists for user ${userId}. Returning true.`
-        );
         return true;
       }
 
       // Otherwise, even though the request succeeded, no profile data exists
-      console.log(
-        `[checkStudentProfile] No profile data found for user ${userId}. Returning false.`
-      );
       return false;
     }
 
     if (response.status === 404) {
-      console.log(
-        `[checkStudentProfile] Profile does not exist (Status: ${response.status}). Returning false.`
-      );
       return false; // Profile does not exist
     }
 
     // Handle other non-OK statuses as errors
     throw new Error(`HTTP error! status: ${response.status}`);
   } catch (error) {
-    console.error("[checkStudentProfile] Error:", error);
     // Check error response
     if (error.response && error.response.status === 404) {
       return false; // API client will throw for 404, but we want to handle it as "no profile"
@@ -175,27 +133,12 @@ function LoginPage() {
 
   // Redirect logic after authentication and user profile fetch
   useEffect(() => {
-    console.log(
-      "[LoginPage] Mount/Update - Adding redirect effect. This should run AFTER successful login."
-    );
-
     const handleRedirect = async () => {
-      console.log(
-        "[Login Redirect Effect] Running. isAuthenticated:",
-        isAuthenticated,
-        "User:",
-        user,
-        "Token exists:",
-        !!token
-      );
       if (isAuthenticated && user && token) {
         // Ensure token is in localStorage
         if (!localStorage.getItem("token")) {
           localStorage.setItem("token", token);
         }
-        console.log(
-          `[Login Redirect Effect] User authenticated. Role: ${user.role}, ID: ${user.id}`
-        );
 
         // Set checking profile state to show loading spinner
         setIsCheckingProfile(true);
@@ -209,24 +152,12 @@ function LoginPage() {
           switch (user.role) {
             case "merchant":
               // Check if merchant has a profile
-              console.log(
-                `[Login Redirect Effect] Checking merchant profile for user ID: ${user.id}`
-              );
               profileExists = await checkMerchantProfile(user.id);
-              console.log(
-                `[Login Redirect Effect] Merchant profile check result: ${profileExists}`
-              );
 
               if (profileExists) {
-                console.log(
-                  "[Login Redirect Effect] Merchant profile exists. Navigating to /merchant-dashboard"
-                );
                 setSuccessMessage("Successfully Logged In");
                 navigate("/merchant-dashboard", { replace: true });
               } else {
-                console.log(
-                  "[Login Redirect Effect] Merchant profile does NOT exist. Navigating to /profile/merchant/create"
-                );
                 setSuccessMessage(
                   "Login successful! Please complete your merchant profile."
                 );
@@ -236,24 +167,12 @@ function LoginPage() {
 
             case "student":
               // Check if student has a profile
-              console.log(
-                `[Login Redirect Effect] Checking student profile for user ID: ${user.id}`
-              );
               profileExists = await checkStudentProfile(user.id);
-              console.log(
-                `[Login Redirect Effect] Student profile check result: ${profileExists}`
-              );
 
               if (profileExists) {
-                console.log(
-                  "[Login Redirect Effect] Student profile exists. Navigating to /listings"
-                );
                 setSuccessMessage("Successfully Logged In");
                 navigate("/listings", { replace: true });
               } else {
-                console.log(
-                  "[Login Redirect Effect] Student profile does NOT exist. Navigating to /profile/student/create"
-                );
                 setSuccessMessage(
                   "Login successful! Please complete your student profile."
                 );
@@ -264,15 +183,9 @@ function LoginPage() {
             case "tutor":
               // Check if the user has a profile using profile_id from user object
               if (user.profile_id) {
-                console.log(
-                  `[Login Redirect Effect] Tutor profile exists. Navigating to /listings`
-                );
                 setSuccessMessage("Successfully Logged In");
                 navigate("/listings", { replace: true });
               } else {
-                console.log(
-                  `[Login Redirect Effect] Tutor profile does NOT exist. Navigating to /profile/tutor/create`
-                );
                 setSuccessMessage(
                   "Login successful! Please complete your tutor profile."
                 );
@@ -283,15 +196,9 @@ function LoginPage() {
             case "campus_admin":
               // Check if the user has a profile using profile_id from user object
               if (user.profile_id) {
-                console.log(
-                  `[Login Redirect Effect] Campus admin profile exists. Navigating to /listings`
-                );
                 setSuccessMessage("Successfully Logged In");
                 navigate("/listings", { replace: true });
               } else {
-                console.log(
-                  `[Login Redirect Effect] Campus admin profile does NOT exist. Navigating to /profile/campus-admin/create`
-                );
                 setSuccessMessage(
                   "Login successful! Please complete your campus admin profile."
                 );
@@ -304,10 +211,6 @@ function LoginPage() {
               navigate("/listings", { replace: true });
           }
         } catch (error) {
-          console.error(
-            "[Login Redirect Effect] Failed to check profile:",
-            error
-          );
           setErrorMessage(
             "Could not verify profile status. Please try again later."
           );
@@ -354,9 +257,6 @@ function LoginPage() {
       const resultAction = await dispatch(loginUser({ email, password }));
 
       if (loginUser.fulfilled.match(resultAction)) {
-        console.log(
-          "[Login HandleSubmit] Login successful. Dispatching fetchUserProfile."
-        );
         dispatch(fetchUserProfile());
       }
     } catch (error) {
@@ -498,13 +398,7 @@ function LoginPage() {
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-semibold flex justify-center items-center transition duration-300 shadow-md"
                 disabled={loading || isCheckingProfile}
               >
-                {loading ? (
-                  <Spinner size="sm" />
-                ) : isCheckingProfile ? (
-                  <Spinner size="sm" />
-                ) : (
-                  "Sign in"
-                )}
+                {loading || isCheckingProfile ? "Logging in..." : "Login"}
               </button>
             </div>
 

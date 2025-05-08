@@ -64,11 +64,13 @@ const ProductCard = ({ product, onAddToCart, uniqueKey }) => {
         >
           <Heart size={18} />
         </button>
-        <img
-          src={imageUrl}
-          alt={product.name}
-          className="w-full h-full object-cover rounded-lg border-4 border-blue-100 dark:border-gray-700 shadow-lg mx-auto transition-transform duration-500 group-hover:scale-105"
-        />
+        <Link to={`/products/${product.id}`}>
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover rounded-lg border-4 border-blue-100 dark:border-gray-700 shadow-lg mx-auto transition-transform duration-500 group-hover:scale-105"
+          />
+        </Link>
         <div className="absolute inset-x-0 bottom-0 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 py-3 px-4 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
           <button
             className="w-full flex items-center justify-center space-x-2 bg-gray-900 dark:bg-blue-700 hover:bg-black dark:hover:bg-blue-800 text-white py-2 rounded-lg font-medium transition-colors cursor-pointer group-hover:cursor-pointer"
@@ -93,7 +95,7 @@ const ProductCard = ({ product, onAddToCart, uniqueKey }) => {
           </span>
         </div>
         <span className="font-semibold text-gray-900 dark:text-white">
-          ETB{isNaN(price) ? product.price : price.toFixed(2)}
+          {isNaN(price) ? product.price : price.toFixed(2)} ETB
         </span>
       </div>
     </div>

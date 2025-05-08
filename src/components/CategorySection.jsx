@@ -58,9 +58,9 @@ const CategorySection = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
-            <a
+            <Link
               key={category.id}
-              href="#"
+              to={`/listings?category=${encodeURIComponent(category.name)}`}
               className="group relative overflow-hidden rounded-xl aspect-[0.9/1] block bg-white dark:bg-gray-800"
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10"></div>
@@ -84,7 +84,7 @@ const CategorySection = () => {
                   />
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
         <div className="mt-8 text-center md:hidden">
