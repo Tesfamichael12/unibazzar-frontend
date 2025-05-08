@@ -28,14 +28,27 @@ const ProductCard = ({ product, onAddToCart, uniqueKey }) => {
       ? product.category.name
       : product.category || "";
 
+  const BACKEND_URL = "http://localhost:8000";
+  // Helper function to get valid image URL
+  function getValidImageUrl(url) {
+    if (!url) return null;
+    if (
+      url.startsWith("http") ||
+      url.startsWith("https") ||
+      url.startsWith("https%3A")
+    ) {
+      return decodeURIComponent(url);
+    }
+    // Use as local media
+    return `${BACKEND_URL}/media/${url.startsWith("/") ? url.slice(1) : url}`;
+  }
+
   // Use product.image or fallback to product.photo, or null if neither exists
-  const imageUrl = product.image || product.photo || null;
+  const imageUrl = getValidImageUrl(product.image || product.photo);
 
-  // Ensure price is a number
-  const price = Number(product.price);
-
-  // Fallback for rating
+  // Get rating and price safely
   const rating = product.rating || 0;
+  const price = Number(product.price) || 0;
 
   return (
     <div key={uniqueKey} className="group">
