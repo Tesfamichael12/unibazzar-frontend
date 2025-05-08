@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Spinner from "../components/ui/Spinner";
+import ReviewSection from "../components/review/ReviewSection";
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { type, id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,7 +64,7 @@ const ProductDetail = () => {
 
   if (product) {
     return (
-      <section className="py-12 px-4 bg-gray-50 dark:bg-gray-900 min-h-[80vh]">
+      <section className="pt-24 py-12 px-4 bg-gray-50 dark:bg-gray-900 min-h-[80vh]">
         <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
           <div className="md:w-1/2 flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
             <img
@@ -116,6 +117,9 @@ const ProductDetail = () => {
               </Link>
             </div>
           </div>
+        </div>
+        <div className="max-w-4xl mx-auto">
+          <ReviewSection type={type} objectId={product.id} />
         </div>
       </section>
     );
