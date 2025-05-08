@@ -71,7 +71,7 @@ const FeaturedProduct = () => {
               key={product.id}
               to="/listings"
               className="group block h-full"
-              style={{ textDecoration: 'none' }}
+              style={{ textDecoration: "none" }}
             >
               <div className="relative overflow-hidden rounded-xl aspect-square mb-4 bg-white dark:bg-gray-800 flex items-center justify-center">
                 {product.isNew && (
@@ -80,8 +80,14 @@ const FeaturedProduct = () => {
                   </span>
                 )}
                 <button
-                  onClick={e => { e.preventDefault(); e.stopPropagation(); dispatch(toggleFavorite(product.id)); }}
-                  className={`absolute top-3 right-3 z-10 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer ${isFavorite(product.id) ? "text-red-500 opacity-100" : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dispatch(toggleFavorite(product.id));
+                  }}
+                  className={`absolute top-3 right-3 z-10 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:text-red-500 p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer ${
+                    isFavorite(product.id) ? "text-red-500 opacity-100" : ""
+                  }`}
                   type="button"
                   aria-label="Mark as Read Later"
                 >
@@ -100,7 +106,18 @@ const FeaturedProduct = () => {
                 <div className="absolute inset-x-0 bottom-0 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 py-3 px-4 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
                   <button
                     className="w-full flex items-center justify-center space-x-2 bg-gray-900 dark:bg-blue-700 hover:bg-black dark:hover:bg-blue-800 text-white py-2 rounded-lg font-medium transition-colors cursor-pointer"
-                    onClick={e => { e.preventDefault(); e.stopPropagation(); dispatch(addToCart({ id: product.id, title: product.name, price: product.price, imageUrl: product.image })); }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      dispatch(
+                        addToCart({
+                          id: product.id,
+                          title: product.name,
+                          price: product.price,
+                          imageUrl: product.image,
+                        })
+                      );
+                    }}
                   >
                     <ShoppingBag size={18} />
                     <span>Add to Cart</span>

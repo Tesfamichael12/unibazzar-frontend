@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Heart, ShoppingBag, Star } from "lucide-react";
+import toast from "react-hot-toast";
 
 /**
  * Product card component
@@ -50,6 +51,43 @@ const ProductCard = ({ product, onAddToCart, uniqueKey }) => {
   const rating = product.rating || 0;
   const price = Number(product.price) || 0;
 
+  async function handleAddToCartWithFetch(productId, dispatch, onAddToCart) {
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/products/merchant-products/${productId}/`
+      );
+      if (!res.ok) throw new Error("Product not found");
+      const product = await res.json();
+      dispatch({
+        type: "cart/addToCart",
+        payload: {
+          id: product.id,
+          title: product.name,
+          price: product.price,
+          imageUrl: product.photo || product.image,
+        },
+      });
+      if (onAddToCart) onAddToCart(product);
+      toast(
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <img
+            src={product.photo || product.image}
+            alt={product.name}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 8,
+              objectFit: "cover",
+            }}
+          />
+          <span style={{ fontWeight: 500 }}>{product.name} added to cart!</span>
+        </div>
+      );
+    } catch (err) {
+      toast.error("Failed to add product to cart.");
+    }
+  }
+
   return (
     <div key={uniqueKey} className="group">
       <div className="relative overflow-hidden rounded-xl aspect-square mb-4 bg-white dark:bg-gray-800 flex items-center justify-center">
@@ -74,7 +112,13 @@ const ProductCard = ({ product, onAddToCart, uniqueKey }) => {
         <div className="absolute inset-x-0 bottom-0 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 py-3 px-4 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
           <button
             className="w-full flex items-center justify-center space-x-2 bg-gray-900 dark:bg-blue-700 hover:bg-black dark:hover:bg-blue-800 text-white py-2 rounded-lg font-medium transition-colors cursor-pointer group-hover:cursor-pointer"
-            onClick={() => onAddToCart && onAddToCart(product)}
+            onClick={() =>
+              handleAddToCartWithFetch(
+                product.id,
+                window.store?.dispatch || (() => {}),
+                onAddToCart
+              )
+            }
           >
             <ShoppingBag size={18} />
             <span>Add to Cart</span>
