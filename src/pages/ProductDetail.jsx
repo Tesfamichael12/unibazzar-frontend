@@ -4,7 +4,9 @@ import Spinner from "../components/ui/Spinner";
 import ReviewSection from "../components/review/ReviewSection";
 
 const ProductDetail = () => {
-  const { type, id } = useParams();
+  const { type: rawType, id } = useParams();
+  const type = rawType || "merchant";
+  console.log("ProductDetail type param:", type, "id:", id);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,7 +56,7 @@ const ProductDetail = () => {
         <p className="mb-4 text-lg font-semibold">{error}</p>
         <Link
           to="/listings"
-          className="text-blue-600 dark:text-blue-400 underline"
+          className="text-blue-600 dark:text-blue-400 underline cursor-pointer"
         >
           Back to Listings
         </Link>
@@ -106,12 +108,12 @@ const ProductDetail = () => {
               )}
             </div>
             <div className="mt-6 flex gap-4">
-              <button className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg transition-colors">
+              <button className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg transition-colors cursor-pointer">
                 Add to Cart
               </button>
               <Link
                 to="/listings"
-                className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer"
               >
                 Back to Listings
               </Link>

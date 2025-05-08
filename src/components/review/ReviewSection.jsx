@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 const CONTENT_TYPE_MAP = {
   merchant: 21, // Update with your actual content type IDs
@@ -27,9 +28,12 @@ const ReviewSection = ({ type, objectId }) => {
     if (!contentTypeId || !objectId) return;
     setLoading(true);
     setError(null);
-    fetch(`${API_BASE}/api/products/reviews/?content_type=${contentTypeId}&object_id=${objectId}`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
+    fetch(
+      `${API_BASE}/api/products/reviews/?content_type=${contentTypeId}&object_id=${objectId}`,
+      {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      }
+    )
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to load reviews");
         const data = await res.json();
@@ -41,6 +45,18 @@ const ReviewSection = ({ type, objectId }) => {
         setLoading(false);
       });
   }, [contentTypeId, objectId, token]);
+
+  // Debug: log what is being sent on submit
+  useEffect(() => {
+    if (submitting) {
+      console.log("Review submit payload:", {
+        content_type: contentTypeId,
+        object_id: objectId,
+        rating: Number(form.rating),
+        comment: form.comment.trim(),
+      });
+    }
+  }, [submitting]);
 
   // Handle form input
   const handleChange = (e) => {
@@ -82,9 +98,12 @@ const ReviewSection = ({ type, objectId }) => {
         setEditingId(null);
         setSuccess(editingId ? "Review updated!" : "Review submitted!");
         // Refetch reviews
-        return fetch(`${API_BASE}/api/products/reviews/?content_type=${contentTypeId}&object_id=${objectId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        return fetch(
+          `${API_BASE}/api/products/reviews/?content_type=${contentTypeId}&object_id=${objectId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
       })
       .then((res) => res.json())
       .then((data) => {
@@ -124,20 +143,30 @@ const ReviewSection = ({ type, objectId }) => {
 
   return (
     <section className="mt-12">
-      <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Product Reviews</h3>
+      <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+        Product Reviews
+      </h3>
       {loading && (
-        <div className="text-gray-500 dark:text-gray-400">Loading reviews...</div>
+        <div className="text-gray-500 dark:text-gray-400">
+          Loading reviews...
+        </div>
       )}
       {error && (
-        <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-4 py-2 rounded mb-4">{error}</div>
+        <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 px-4 py-2 rounded mb-4">
+          {error}
+        </div>
       )}
       {success && (
-        <div className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded mb-4">{success}</div>
+        <div className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-4 py-2 rounded mb-4">
+          {success}
+        </div>
       )}
       {!loading && !error && (
         <div className="space-y-6 mb-8">
           {reviews.length === 0 && (
-            <div className="text-gray-500 dark:text-gray-400">No reviews yet.</div>
+            <div className="text-gray-500 dark:text-gray-400">
+              No reviews yet.
+            </div>
           )}
           {reviews.map((review) => (
             <div
@@ -146,29 +175,63 @@ const ReviewSection = ({ type, objectId }) => {
             >
               <div>
                 <div className="flex items-center gap-2 mb-1">
+                  {/* Reviewer avatar and name */}
+                  <img
+                    src={
+                      review.reviewer_profile_pic ||
+                      "/assets/default_user_1.webp"
+                    }
+                    alt={review.reviewer_name || "User"}
+                    className="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-700 mr-2"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/assets/default_user_1.webp";
+                    }}
+                  />
+                  <span className="font-medium text-gray-900 dark:text-white mr-2">
+                    {review.reviewer_name || "User"}
+                  </span>
+                  {/* Star rating */}
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i} className={i < review.rating ? "text-yellow-400" : "text-gray-300 dark:text-gray-600"}>&#9733;</span>
+                      <span
+                        key={i}
+                        className={
+                          i < review.rating
+                            ? "text-yellow-400"
+                            : "text-gray-300 dark:text-gray-600"
+                        }
+                      >
+                        &#9733;
+                      </span>
                     ))}
                   </span>
-                  <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{review.rating} / 5</span>
+                  <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                    {review.rating} / 5
+                  </span>
                 </div>
-                <p className="text-gray-700 dark:text-gray-200 mb-1">{review.comment}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Reviewer: {review.reviewer_name || review.reviewer}</p>
+                <p className="text-gray-700 dark:text-gray-200 mb-1">
+                  {review.comment}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Reviewer: {review.reviewer_name || review.reviewer}
+                </p>
               </div>
               {user && review.reviewer === user.id && (
                 <div className="flex gap-2 mt-2 md:mt-0">
                   <button
-                    className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="p-2 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 transition-all duration-200 shadow hover:scale-110 cursor-pointer"
+                    title="Edit Review"
                     onClick={() => handleEdit(review)}
                   >
-                    Edit
+                    <FiEdit2 className="w-5 h-5" />
                   </button>
                   <button
-                    className="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                    className="p-2 rounded-full bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-500 hover:text-white dark:hover:bg-red-700 transition-all duration-200 shadow-lg hover:shadow-red-500/60 hover:scale-110 cursor-pointer"
+                    title="Delete Review"
                     onClick={() => handleDelete(review.id)}
                   >
-                    Delete
+                    <FiTrash2 className="w-5 h-5" />
                   </button>
                 </div>
               )}
@@ -185,7 +248,9 @@ const ReviewSection = ({ type, objectId }) => {
             {editingId ? "Edit Your Review" : "Add a Review"}
           </h4>
           <div className="mb-4">
-            <label className="block mb-1 text-gray-700 dark:text-gray-300">Rating</label>
+            <label className="block mb-1 text-gray-700 dark:text-gray-300">
+              Rating
+            </label>
             <select
               name="rating"
               value={form.rating}
@@ -194,12 +259,16 @@ const ReviewSection = ({ type, objectId }) => {
               required
             >
               {[5, 4, 3, 2, 1].map((r) => (
-                <option key={r} value={r}>{r}</option>
+                <option key={r} value={r}>
+                  {r}
+                </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
-            <label className="block mb-1 text-gray-700 dark:text-gray-300">Comment</label>
+            <label className="block mb-1 text-gray-700 dark:text-gray-300">
+              Comment
+            </label>
             <textarea
               name="comment"
               value={form.comment}
@@ -211,7 +280,7 @@ const ReviewSection = ({ type, objectId }) => {
           </div>
           <button
             type="submit"
-            className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg transition-colors"
+            className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-lg transition-colors cursor-pointer"
             disabled={submitting}
           >
             {editingId ? "Update Review" : "Submit Review"}
@@ -219,7 +288,7 @@ const ReviewSection = ({ type, objectId }) => {
           {editingId && (
             <button
               type="button"
-              className="ml-4 bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-lg"
+              className="ml-4 bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-lg cursor-pointer"
               onClick={() => {
                 setEditingId(null);
                 setForm({ rating: 5, comment: "" });
@@ -230,7 +299,9 @@ const ReviewSection = ({ type, objectId }) => {
           )}
         </form>
       ) : (
-        <div className="text-gray-500 dark:text-gray-400">Login to add a review.</div>
+        <div className="text-gray-500 dark:text-gray-400">
+          Login to add a review.
+        </div>
       )}
     </section>
   );

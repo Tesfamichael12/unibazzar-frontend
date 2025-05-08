@@ -11,12 +11,18 @@ function CartPage() {
   const total = useSelector((state) => state.cart.totalAmount);
 
   if (cartItems.length === 0) {
-    return <div className="p-6 pt-20 text-center text-gray-800 dark:text-white">Your cart is empty.</div>;
+    return (
+      <div className="p-6 pt-20 text-center text-gray-800 dark:text-white">
+        Your cart is empty.
+      </div>
+    );
   }
 
   return (
     <div className="p-6 pt-20 max-w-4xl mx-auto dark:bg-gray-900 dark:text-white">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Your Cart</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
+        Your Cart
+      </h1>
 
       <div className="space-y-6">
         {cartItems.map((item) => (
@@ -30,9 +36,15 @@ function CartPage() {
               className="w-24 h-24 object-cover rounded mr-4"
             />
             <div className="flex-1">
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">{item.title}</h2>
-              <p className="text-blue-600 font-bold dark:text-blue-400">${item.price}</p>
-              <p className="text-gray-600 dark:text-gray-400">Qty: {item.quantity}</p>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                {item.title}
+              </h2>
+              <p className="text-blue-600 font-bold dark:text-blue-400">
+                {item.price} ETB
+              </p>
+              <p className="text-gray-600 dark:text-gray-400">
+                Qty: {item.quantity}
+              </p>
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={() => dispatch(decreaseQuantity(item.id))}
