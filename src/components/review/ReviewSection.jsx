@@ -176,10 +176,16 @@ const ReviewSection = ({ type, objectId }) => {
               >
                 <div className="flex items-center gap-4 mb-2">
                   <img
-                    src={review.reviewer_profile_pic || "/assets/default_user_1.webp"}
+                    src={
+                      review.reviewer_profile_pic ||
+                      "/assets/default_user_1.webp"
+                    }
                     alt={review.reviewer_name || "User"}
                     className="w-12 h-12 rounded-full object-cover border-2 border-blue-200 dark:border-blue-700 shadow"
-                    onError={e => { e.target.onerror = null; e.target.src = "/assets/default_user_1.webp"; }}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/assets/default_user_1.webp";
+                    }}
                   />
                   <div>
                     <div className="font-semibold text-gray-900 dark:text-white text-base">
@@ -187,11 +193,20 @@ const ReviewSection = ({ type, objectId }) => {
                     </div>
                     <div className="flex items-center gap-1 mt-1">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i} className={i < review.rating ? "text-yellow-400" : "text-gray-300 dark:text-gray-600"}>
+                        <span
+                          key={i}
+                          className={
+                            i < review.rating
+                              ? "text-yellow-400"
+                              : "text-gray-300 dark:text-gray-600"
+                          }
+                        >
                           &#9733;
                         </span>
                       ))}
-                      <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{review.rating} / 5</span>
+                      <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                        {review.rating} / 5
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -199,7 +214,11 @@ const ReviewSection = ({ type, objectId }) => {
                   {review.comment}
                 </p>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs text-gray-400 dark:text-gray-500">{review.created_at ? new Date(review.created_at).toLocaleDateString() : ""}</span>
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                    {review.created_at
+                      ? new Date(review.created_at).toLocaleDateString()
+                      : ""}
+                  </span>
                   {user && review.reviewer === user.id && (
                     <div className="flex gap-2">
                       <button
