@@ -433,7 +433,7 @@ const MerchantProfileForm = ({ mode = "create" }) => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center pt-20">
         <div className="p-8 bg-white dark:bg-gray-900 rounded-xl shadow-xl w-full max-w-2xl">
           <div className="mb-6 text-center">
             <h1 className="text-2xl font-bold text-gray-800 dark:text-white font-poppins">

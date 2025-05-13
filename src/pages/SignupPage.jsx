@@ -158,7 +158,7 @@ function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-900 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-900 px-4 pt-20">
       <div className="w-full max-w-md my-auto">
         <div className="bg-gradient-to-br from-white/80 to-white/60 dark:from-gray-800/80 dark:to-gray-900/60 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 text-gray-800 dark:text-white">
           <div className="px-6 pt-8 pb-6 text-center">

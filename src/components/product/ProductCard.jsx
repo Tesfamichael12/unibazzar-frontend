@@ -44,8 +44,15 @@ const ProductCard = ({ product, onAddToCart, uniqueKey }) => {
     return `${BACKEND_URL}/media/${url.startsWith("/") ? url.slice(1) : url}`;
   }
 
-  // Use product.image or fallback to product.photo, or null if neither exists
-  const imageUrl = getValidImageUrl(product.image || product.photo);
+  // Use correct image and title for tutor-services
+  let imageUrl = getValidImageUrl(
+    product.image || product.photo || product.imageUrl
+  );
+  let displayName = product.name || product.title || "Untitled";
+  if (productTypePath === "tutor-services") {
+    imageUrl = product.banner_photo || imageUrl;
+    displayName = product.description || displayName;
+  }
 
   // Get rating and price safely
   const rating = product.rating || 0;
@@ -105,7 +112,7 @@ const ProductCard = ({ product, onAddToCart, uniqueKey }) => {
         <Link to={`/products/${product.id}`}>
           <img
             src={imageUrl}
-            alt={product.name}
+            alt={displayName}
             className="w-full h-full object-cover rounded-lg border-4 border-blue-100 dark:border-gray-700 shadow-lg mx-auto transition-transform duration-500 group-hover:scale-105"
           />
         </Link>
@@ -130,7 +137,7 @@ const ProductCard = ({ product, onAddToCart, uniqueKey }) => {
           {categoryLabel}
         </span>
         <h3 className="font-medium text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-          <Link to={`/${productTypePath}/${product.id}`}>{product.name}</Link>
+          <Link to={`/${productTypePath}/${product.id}`}>{displayName}</Link>
         </h3>
         <div className="flex items-center justify-center gap-2 mb-1">
           <Star size={16} className="text-yellow-400 fill-current" />

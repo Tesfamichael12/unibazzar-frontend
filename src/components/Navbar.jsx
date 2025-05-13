@@ -146,24 +146,31 @@ export default function Navbar() {
               onClick={() => {
                 setIsToggling(true);
                 toggleTheme();
-                setTimeout(() => setIsToggling(false), 400);
+                setTimeout(() => setIsToggling(false), 1500);
               }}
-              className="p-2 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200 text-2xl text-gray-800 dark:text-gray-300 focus:outline-none cursor-pointer group"
+              className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200 text-lg text-gray-800 dark:text-gray-300 focus:outline-none cursor-pointer group"
               aria-label="Toggle Theme"
             >
-              {isDarkMode ? (
-                <IoSunny
-                  className={`text-blue-400 text-2xl ${
-                    isToggling ? "animate-toggle-rotate" : ""
-                  }`}
-                />
-              ) : (
-                <IoMoon
-                  className={`text-blue-400 text-2xl ${
-                    isToggling ? "animate-toggle-rotate" : ""
-                  }`}
-                />
-              )}
+              <motion.span
+                key={isDarkMode ? "sun" : "moon"}
+                initial={{ rotate: 0, scale: 0.7, opacity: 0 }}
+                animate={{ rotate: 360, scale: 1.1, opacity: 1 }}
+                exit={{ rotate: -180, scale: 0.7, opacity: 0 }}
+                transition={{
+                  duration: 1.5,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15,
+                }}
+                className="inline-block"
+                style={{ willChange: "transform, opacity" }}
+              >
+                {isDarkMode ? (
+                  <IoSunny className="drop-shadow-[0_0_8px_rgba(15,107,174,0.7)] text-xl" />
+                ) : (
+                  <IoMoon className="drop-shadow-[0_0_8px_rgba(15,107,174,0.7)] text-xl" />
+                )}
+              </motion.span>
             </button>
             {user ? (
               <>
@@ -214,7 +221,7 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="hover:text-blue-500 transition font-medium"
+                  className="hover:text-blue-500 transition font-medium cursor-pointer"
                 >
                   Login
                 </Link>
@@ -339,7 +346,7 @@ export default function Navbar() {
                 <>
                   <Link
                     to="/login"
-                    className="hover:text-blue-500 transition font-medium text-gray-800 dark:text-gray-100"
+                    className="hover:text-blue-500 transition font-medium text-gray-800 dark:text-gray-100 cursor-pointer"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Login

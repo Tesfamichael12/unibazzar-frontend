@@ -301,7 +301,7 @@ const StudentProfileForm = ({ mode = "create" }) => {
 
   return (
     <Layout>
-      <div className="p-8 bg-white dark:bg-gray-900 rounded-xl shadow-xl">
+      <div className="p-8 pt-20 bg-white dark:bg-gray-900 rounded-xl shadow-xl">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-white font-poppins">
             {mode === "create"

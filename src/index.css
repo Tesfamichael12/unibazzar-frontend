@@ -1,5 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  font-family: "Poppins", sans-serif;
+}
 
 @keyframes toggle-rotate {
   0% {

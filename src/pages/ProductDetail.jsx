@@ -16,37 +16,88 @@ const ProductDetail = () => {
 
   // Generate a random views count for demo purposes
   const [views] = useState(() => Math.floor(Math.random() * 900 + 100));
-
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetch(`http://127.0.0.1:8000/api/products/merchant-products/${id}/`)
-      .then(async (res) => {
-        const contentType = res.headers.get("content-type");
-        if (!res.ok) {
-          let errorMsg = `Product not found (status ${res.status})`;
-          if (contentType && contentType.includes("application/json")) {
-            const errJson = await res.json().catch(() => null);
-            if (errJson && errJson.detail) errorMsg = errJson.detail;
-          }
-          throw new Error(errorMsg);
-        }
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error(
-            "Unexpected response from server. Please try again later."
+    // Helper to determine if a category is educational
+    const isEducationalCategory = (catName) => {
+      if (!catName) return false;
+      const name = catName.toLowerCase();
+      return (
+        name.includes("educational material") ||
+        name.includes("notes") ||
+        name.includes("textbook")
+      );
+    };
+    // Try merchant first, then check category, then try student if needed
+    const tryFetch = async () => {
+      // Try merchant-products first
+      let res = await fetch(
+        `http://127.0.0.1:8000/api/products/merchant-products/${id}/`
+      );
+      let contentType = res.headers.get("content-type");
+      if (res.ok && contentType && contentType.includes("application/json")) {
+        let data = await res.json();
+        const catName = data.category?.name || "";
+        if (isEducationalCategory(catName)) {
+          // Refetch from student-products if educational
+          res = await fetch(
+            `http://127.0.0.1:8000/api/products/student-products/${id}/`
           );
+          contentType = res.headers.get("content-type");
+          if (
+            res.ok &&
+            contentType &&
+            contentType.includes("application/json")
+          ) {
+            data = await res.json();
+            setProduct(data);
+            setLoading(false);
+            return;
+          } else {
+            setError("Product not found in student products");
+            setLoading(false);
+            return;
+          }
+        } else {
+          setProduct(data);
+          setLoading(false);
+          return;
         }
-        return res.json();
-      })
-      .then((data) => {
-        setProduct(data);
+      } else {
+        // If not found in merchant, try student-products
+        res = await fetch(
+          `http://127.0.0.1:8000/api/products/student-products/${id}/`
+        );
+        contentType = res.headers.get("content-type");
+        if (res.ok && contentType && contentType.includes("application/json")) {
+          const data = await res.json();
+          setProduct(data);
+          setLoading(false);
+          return;
+        }
+        // If not found in student, try tutor-services
+        res = await fetch(
+          `http://127.0.0.1:8000/api/products/tutor-services/${id}/`
+        );
+        contentType = res.headers.get("content-type");
+        if (res.ok && contentType && contentType.includes("application/json")) {
+          const data = await res.json();
+          setProduct(data);
+          setLoading(false);
+          return;
+        }
+        let errorMsg = `Product not found (status ${res.status})`;
+        if (contentType && contentType.includes("application/json")) {
+          const errJson = await res.json().catch(() => null);
+          if (errJson && errJson.detail) errorMsg = errJson.detail;
+        }
+        setError(errorMsg);
         setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, [id]);
+      }
+    };
+    tryFetch();
+  }, [id, type]);
 
   if (loading) {
     return (
@@ -71,13 +122,24 @@ const ProductDetail = () => {
   }
 
   if (product) {
+    // Tutor service: use banner_photo and description
+    const isTutor =
+      product.category &&
+      (product.category.name === "tutoring" ||
+        product.category.slug === "tutoring");
+    const imageUrl = isTutor
+      ? product.banner_photo
+      : product.photo || product.image;
+    const displayName = isTutor
+      ? product.title || product.description // Refined to prefer title, then description
+      : product.name || product.title;
     return (
       <section className="pt-24 py-12 px-4 bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-[80vh]">
         <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-blue-100 dark:border-blue-900 relative">
           <div className="md:w-1/2 flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200 dark:from-gray-900 dark:to-gray-800 p-8">
             <img
-              src={product.photo}
-              alt={product.name}
+              src={imageUrl}
+              alt={displayName}
               className="rounded-2xl w-full max-h-96 object-contain shadow-xl border-4 border-blue-100 dark:border-blue-700 bg-white dark:bg-gray-900"
             />
           </div>
@@ -100,7 +162,7 @@ const ProductDetail = () => {
                       {views} views
                     </span>
                     <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                      {product.name}
+                      {displayName}
                     </h2>
                   </div>
                 </div>

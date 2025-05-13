@@ -37,17 +37,17 @@ import SignupCompletionHandler from "./components/SignupCompletionHandler";
 
 // Routes where Navbar and Footer should be hidden
 const noNavbarRoutes = [
-  "/login",
-  "/signup",
-  "/forgot-password",
-  "/reset-password",
-  "/profile/student/create",
-  "/profile/student/edit",
-  "/profile/merchant/create",
-  "/profile/merchant/edit",
-  "/profile/tutor/create",
-  "/profile/tutor/edit",
-  "/signup/complete",
+  // "/login", // No longer hiding Navbar for login
+  // "/signup", // No longer hiding Navbar for signup
+  // "/forgot-password",
+  // "/reset-password",
+  // "/profile/student/create",
+  // "/profile/student/edit",
+  // "/profile/merchant/create",
+  // "/profile/merchant/edit",
+  // "/profile/tutor/create",
+  // "/profile/tutor/edit",
+  // "/signup/complete",
 ];
 
 // AppContent component to access route location
@@ -57,10 +57,11 @@ function AppContent() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   // Check if the current path or its parent path is in the noNavbarRoutes list
-  const shouldShowNavbar = !noNavbarRoutes.some(
-    (route) =>
-      location.pathname === route || location.pathname.startsWith(route + "/")
-  );
+  // const shouldShowNavbar = !noNavbarRoutes.some(
+  //   (route) =>
+  //     location.pathname === route || location.pathname.startsWith(route + "/")
+  // );
+  const shouldShowNavbar = true; // Always show Navbar
 
   // Fetch user profile and verify token on app initialization
   useEffect(() => {
@@ -97,26 +98,28 @@ function AppContent() {
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
       <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       {/* Theme Toggle Button for pages without Navbar */}
-      {!shouldShowNavbar && (
+      {/* {!shouldShowNavbar && (
         <div className="text-right p-4">
           <ThemeToggle />
         </div>
-      )}
+      )} */}
       {shouldShowNavbar && <Navbar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          {/* Publicly accessible product routes */}
           <Route path="/listings" element={<MarketplacePage />} />
           <Route path="/listing/:id" element={<ListingDetailPage />} />
           <Route path="/similar/:id" element={<SimilarItemsPage />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
+
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="/thank-you" element={<ThankYou />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
 
           {/* Password Reset Routes */}
           <Route path="/forgot-password" element={<PasswordResetPage />} />
