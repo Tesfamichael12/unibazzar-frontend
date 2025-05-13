@@ -28,6 +28,7 @@ import { fetchUserProfile, verifyToken } from "./redux/slices/authSlice";
 import ThemeToggle from "./components/ui/ThemeToggle";
 import ThankYou from "./pages/ThankYou";
 import ProductDetail from "./pages/ProductDetail";
+import Chatbot from "./components/Chatbot/Chatbot"; // Import the Chatbot
 
 // Import profile form components
 import StudentProfileForm from "./pages/profile/forms/StudentProfileForm";
@@ -269,6 +270,7 @@ function AppContent() {
         </Routes>
       </main>
       {shouldShowNavbar && <Footer />}
+      <Chatbot /> {/* Add Chatbot here */}
     </div>
   );
 }
