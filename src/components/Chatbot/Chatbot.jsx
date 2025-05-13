@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPaperPlane, FaTimes, FaRobot } from 'react-icons/fa';
-import api from '../../redux/api/uniBazzarApi'; // Assuming your API client is here
+import api from '../../redux/api/uniBazzarApi'; 
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +106,7 @@ const Chatbot = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed bottom-24 right-5 w-80 h-[450px] bg-white dark:bg-gray-800 shadow-2xl rounded-lg flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 z-50"
+            className="fixed bottom-24 right-5 w-80 h-[450px] bg-white dark:bg-gray-800 shadow-2xl rounded-lg flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 z-50 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)] dark:drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]"
           >
             {/* Header */}
             <div className="bg-blue-600 dark:bg-blue-700 text-white p-4 flex justify-between items-center">
@@ -197,7 +197,7 @@ const Chatbot = () => {
       {/* Toggle Button */}
       <motion.button
         onClick={toggleOpen}
-        className="fixed bottom-5 right-5 bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center z-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer"
+        className="fixed bottom-5 right-5 bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center z-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] dark:drop-shadow-[0_0_12px_rgba(59,130,246,0.4)]"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
