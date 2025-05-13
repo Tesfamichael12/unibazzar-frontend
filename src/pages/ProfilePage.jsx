@@ -237,6 +237,18 @@ function ProfilePage() {
                 label="Phone Number"
                 value={user.phone_number}
               />
+              <ProfileField
+                icon={<FaGraduationCap size={20} className="text-blue-600" />}
+                label="University"
+                value={user.university}
+              />
+              {user.university_details && (
+                <ProfileField
+                  icon={<FaBuilding size={20} className="text-blue-600" />}
+                  label="University Details"
+                  value={user.university_details}
+                />
+              )}
               <p className="text-xs text-neutral-500 dark:text-gray-300 mt-4 font-inter">
                 Member since {new Date(user.date_joined).toLocaleDateString()}
               </p>
