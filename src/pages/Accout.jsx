@@ -14,7 +14,7 @@ import {
   FaBuilding,
   FaUser,
   FaCalendarAlt,
-  FaUserFriends
+  FaUserFriends,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -131,46 +131,51 @@ function Account() {
     <div className="bg-white dark:bg-gray-900 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <AnimatePresence>
-        {error && (
-          <motion.div 
-            className="bg-red-100 border border-red-200 text-red-700 p-3 rounded-lg mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <p className="text-sm text-center font-inter">{error}</p>
-            <button
-              className="text-red-700 text-xs underline ml-2"
-              onClick={() => setError(null)}
+          {error && (
+            <motion.div
+              className="bg-red-100 border border-red-200 text-red-700 p-3 rounded-lg mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
             >
-              Dismiss
-            </button>
-          </motion.div>
-        )}
-        {success && (
-          <motion.div 
-            className="bg-green-100 border border-green-200 text-green-700 p-3 rounded-lg mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <p className="text-sm text-center font-inter">{success}</p>
-            <button
-              className="text-green-700 text-xs underline ml-2"
-              onClick={() => setSuccess(null)}
+              <p className="text-sm text-center font-inter">{error}</p>
+              <button
+                className="text-red-700 text-xs underline ml-2"
+                onClick={() => setError(null)}
+              >
+                Dismiss
+              </button>
+            </motion.div>
+          )}
+          {success && (
+            <motion.div
+              className="bg-green-100 border border-green-200 text-green-700 p-3 rounded-lg mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
             >
-              Dismiss
-            </button>
-          </motion.div>
-        )}
+              <p className="text-sm text-center font-inter">{success}</p>
+              <button
+                className="text-green-700 text-xs underline ml-2"
+                onClick={() => setSuccess(null)}
+              >
+                Dismiss
+              </button>
+            </motion.div>
+          )}
         </AnimatePresence>
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-1/3">
             <ProfileSection title="Profile">
               <div className="flex flex-col items-center">
-                <motion.div className="relative mb-6" initial={{ scale: 0.9 }} animate={{ scale: 1 }} transition={{ duration: 0.4 }}>
+                <motion.div
+                  className="relative mb-6"
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.4 }}
+                >
                   <div className="w-32 h-32 rounded-full bg-neutral-200 overflow-hidden">
                     {user.profile_picture ? (
                       <img

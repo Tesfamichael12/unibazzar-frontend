@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaPaperPlane, FaTimes, FaRobot } from 'react-icons/fa';
-import api from '../../redux/api/uniBazzarApi'; 
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaPaperPlane, FaTimes, FaRobot } from "react-icons/fa";
+import api from "../../redux/api/uniBazzarApi";
+import ReactMarkdown from "react-markdown";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(scrollToBottom, [messages]);
@@ -24,7 +25,7 @@ const Chatbot = () => {
         {
           id: Date.now(),
           text: "Hello! I'm your UniBazzar assistant. How can I help you today?",
-          sender: 'bot',
+          sender: "bot",
         },
       ]);
     }
@@ -36,31 +37,35 @@ const Chatbot = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (inputValue.trim() === '') return;
+    if (inputValue.trim() === "") return;
 
     const newMessage = {
       id: Date.now(),
       text: inputValue,
-      sender: 'user',
+      sender: "user",
     };
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    setInputValue('');
+    setInputValue("");
     setIsLoading(true);
 
     try {
       // Make a POST request to the chatbot API endpoint
-      const response = await api.post('/api/chatbot/', { message: newMessage.text }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await api.post(
+        "/api/chatbot/",
+        { message: newMessage.text },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const botResponse = response.data.reply;
       setMessages((prevMessages) => [
         ...prevMessages,
-        { id: Date.now() + 1, text: botResponse, sender: 'bot' },
+        { id: Date.now() + 1, text: botResponse, sender: "bot" },
       ]);
     } catch (error) {
-      let errorMsg = 'Sorry, I encountered an error. Please try again.';
+      let errorMsg = "Sorry, I encountered an error. Please try again.";
       if (error.response && error.response.data && error.response.data.detail) {
         errorMsg = error.response.data.detail;
       }
@@ -69,7 +74,7 @@ const Chatbot = () => {
         {
           id: Date.now() + 1,
           text: errorMsg,
-          sender: 'bot',
+          sender: "bot",
         },
       ]);
     } finally {
@@ -83,7 +88,7 @@ const Chatbot = () => {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { type: 'spring', stiffness: 100, damping: 15 },
+      transition: { type: "spring", stiffness: 100, damping: 15 },
     },
     exit: {
       opacity: 0,
@@ -133,17 +138,21 @@ const Chatbot = () => {
                     initial="hidden"
                     animate="visible"
                     className={`flex ${
-                      msg.sender === 'user' ? 'justify-end' : 'justify-start'
+                      msg.sender === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
                     <div
                       className={`max-w-[70%] p-3 rounded-lg shadow ${
-                        msg.sender === 'user'
-                          ? 'bg-blue-500 text-white rounded-br-none'
-                          : 'bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-bl-none'
+                        msg.sender === "user"
+                          ? "bg-blue-500 text-white rounded-br-none"
+                          : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-bl-none"
                       } font-inter text-sm`}
                     >
-                      {msg.text}
+                      {msg.sender === "bot" ? (
+                        <ReactMarkdown>{msg.text}</ReactMarkdown>
+                      ) : (
+                        msg.text
+                      )}
                     </div>
                   </motion.div>
                 ))}
@@ -184,7 +193,7 @@ const Chatbot = () => {
                 <button
                   type="submit"
                   className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-colors disabled:opacity-50"
-                  disabled={isLoading || inputValue.trim() === ''}
+                  disabled={isLoading || inputValue.trim() === ""}
                   aria-label="Send message"
                 >
                   <FaPaperPlane size={18} />
@@ -201,7 +210,7 @@ const Chatbot = () => {
         className="fixed bottom-5 right-5 bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center z-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] dark:drop-shadow-[0_0_12px_rgba(59,130,246,0.4)]"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        aria-label={isOpen ? 'Close chat' : 'Open chat'}
+        aria-label={isOpen ? "Close chat" : "Open chat"}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
