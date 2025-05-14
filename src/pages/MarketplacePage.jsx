@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/slices/cartSlice";
 import { Tabs, TabsList, TabsTrigger } from "../components/ui/Tabs";
 import ProductGrid from "../components/product/ProductGrid";
+import GlobalSpinner from "../components/ui/GlobalSpinner"; // Import the new GlobalSpinner
 // import { toast } from "react-toastify"; // Remove if not installed
 
 const API_BASE = "http://localhost:8000/api/products";
@@ -20,7 +21,7 @@ const MarketplacePage = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Initial loading state
   const [error, setError] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -85,9 +86,14 @@ const MarketplacePage = () => {
   };
 
   // Helper to fetch paginated data
-  const fetchPaginated = async (url, setProducts, setPagination) => {
-    setLoading(true);
-    setError(null);
+  const fetchPaginated = async (
+    url,
+    setProducts,
+    setPagination,
+    productType
+  ) => {
+    // setLoading(true); // Individual loading for paginated fetches can be handled if needed
+    // setError(null);
     try {
       const data = await safeFetch(url);
       setProducts(Array.isArray(data.results) ? data.results : []);
@@ -99,9 +105,9 @@ const MarketplacePage = () => {
         pageSize: 10, // or parse from backend if dynamic
       });
     } catch (err) {
-      setError(err.message);
+      setError(`Error fetching ${productType}: ${err.message}`);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -113,32 +119,68 @@ const MarketplacePage = () => {
 
   // Fetch all product types and categories on mount
   useEffect(() => {
-    fetchPaginated(
-      `${API_BASE}/merchant-products/`,
-      setMerchantProducts,
-      setMerchantPagination
-    );
-    fetchPaginated(
-      `${API_BASE}/student-products/`,
-      setStudentProducts,
-      setStudentPagination
-    );
-    fetchPaginated(
-      `${API_BASE}/tutor-services/`,
-      setTutorServices,
-      setTutorPagination
-    );
-    safeFetch(`${API_BASE}/categories/`).then((categoriesData) => {
-      setCategories(Array.isArray(categoriesData) ? categoriesData : []);
-      if (categoryParam) {
-        const category = (
-          Array.isArray(categoriesData) ? categoriesData : []
-        ).find(
-          (c) => c.name && c.name.toLowerCase() === categoryParam.toLowerCase()
+    setLoading(true); // Set loading to true at the beginning of data fetching
+    setError(null);
+
+    Promise.allSettled([
+      safeFetch(`${API_BASE}/merchant-products/`).then((data) => {
+        setMerchantProducts(Array.isArray(data.results) ? data.results : []);
+        setMerchantPagination({
+          count: data.count,
+          next: data.next,
+          previous: data.previous,
+          currentPage: getPageFromUrl(`${API_BASE}/merchant-products/`),
+          pageSize: 10,
+        });
+      }),
+      safeFetch(`${API_BASE}/student-products/`).then((data) => {
+        setStudentProducts(Array.isArray(data.results) ? data.results : []);
+        setStudentPagination({
+          count: data.count,
+          next: data.next,
+          previous: data.previous,
+          currentPage: getPageFromUrl(`${API_BASE}/student-products/`),
+          pageSize: 10,
+        });
+      }),
+      safeFetch(`${API_BASE}/tutor-services/`).then((data) => {
+        setTutorServices(Array.isArray(data.results) ? data.results : []);
+        setTutorPagination({
+          count: data.count,
+          next: data.next,
+          previous: data.previous,
+          currentPage: getPageFromUrl(`${API_BASE}/tutor-services/`),
+          pageSize: 10,
+        });
+      }),
+      safeFetch(`${API_BASE}/categories/`).then((categoriesData) => {
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+        if (categoryParam) {
+          const category = (
+            Array.isArray(categoriesData) ? categoriesData : []
+          ).find(
+            (c) =>
+              c.name && c.name.toLowerCase() === categoryParam.toLowerCase()
+          );
+          if (category) setSelectedCategory(category.id);
+        }
+      }),
+    ])
+      .then((results) => {
+        // Check for any rejected promises and set error if needed
+        const firstError = results.find(
+          (result) => result.status === "rejected"
         );
-        if (category) setSelectedCategory(category.id);
-      }
-    });
+        if (firstError) {
+          setError(
+            firstError.reason?.message ||
+              "Failed to load some marketplace data."
+          );
+        }
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false after all fetches are done
+      });
     // eslint-disable-next-line
   }, [categoryParam]);
 
@@ -228,21 +270,31 @@ const MarketplacePage = () => {
       page === 1
         ? `${API_BASE}/merchant-products/`
         : `${API_BASE}/merchant-products/?page=${page}`;
-    fetchPaginated(url, setMerchantProducts, setMerchantPagination);
+    fetchPaginated(
+      url,
+      setMerchantProducts,
+      setMerchantPagination,
+      "merchant products"
+    );
   };
   const handleStudentPageChange = (page) => {
     const url =
       page === 1
         ? `${API_BASE}/student-products/`
         : `${API_BASE}/student-products/?page=${page}`;
-    fetchPaginated(url, setStudentProducts, setStudentPagination);
+    fetchPaginated(
+      url,
+      setStudentProducts,
+      setStudentPagination,
+      "student products"
+    );
   };
   const handleTutorPageChange = (page) => {
     const url =
       page === 1
         ? `${API_BASE}/tutor-services/`
         : `${API_BASE}/tutor-services/?page=${page}`;
-    fetchPaginated(url, setTutorServices, setTutorPagination);
+    fetchPaginated(url, setTutorServices, setTutorPagination, "tutor services");
   };
 
   // Build category filter buttons (including static types)
@@ -262,6 +314,10 @@ const MarketplacePage = () => {
       )
   );
   const allCategoryButtons = [...staticCategories, ...backendCategories];
+
+  if (loading) {
+    return <GlobalSpinner message="Loading marketplace products..." />;
+  }
 
   return (
     <div className="space-y-6 pt-10 m-20">

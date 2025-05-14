@@ -31,6 +31,7 @@ import ProductDetail from "./pages/ProductDetail";
 import Chatbot from "./components/Chatbot/Chatbot"; // Import the Chatbot
 import DashboardRedirect from "./pages/DashboardRedirect"; // Import DashboardRedirect
 import StudentDashboard from "./pages/StudentDashboard"; // Import StudentDashboard
+import MerchantProductManagementPage from "./pages/MerchantDashboard/MerchantProductManagementPage"; // Import MerchantProductManagementPage
 
 // Import profile form components
 import StudentProfileForm from "./pages/profile/forms/StudentProfileForm";
@@ -198,6 +199,14 @@ function AppContent() {
             }
           />
           <Route
+            path="/merchant/products"
+            element={
+              <PrivateRoute requiredRoles={["merchant"]}>
+                <MerchantProductManagementPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/tutor-dashboard"
             element={
               <PrivateRoute requiredRoles={["tutor"]}>
@@ -284,8 +293,9 @@ function AppContent() {
       <Chatbot /> {/* Add Chatbot here */}
     </div>
   );
-}
+} // End of AppContent function
 
+// Ensure the App function definition is present before the export
 function App() {
   return (
     <div className="flex flex-col min-h-screen">

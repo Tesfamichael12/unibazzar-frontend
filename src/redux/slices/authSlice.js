@@ -325,6 +325,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.token = action.payload.access;
         state.refreshToken = action.payload.refresh;
+        state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -396,6 +397,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.loading = false;
+        // Set user state directly from the comprehensive payload from /api/users/me/
         state.user = action.payload;
       })
       .addCase(fetchUserProfile.rejected, (state) => {

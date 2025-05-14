@@ -15,6 +15,7 @@ import {
   FaUser,
   FaCalendarAlt,
   FaUserFriends,
+  FaFileAlt,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -37,7 +38,10 @@ const ProfileSection = ({ title, children }) => (
 const ProfileField = ({ icon, label, value }) => (
   <div className="flex items-start mb-4 last:mb-0">
     <div className="p-2 rounded-full bg-blue-50 dark:bg-blue-900 mr-3">
-      {icon}
+      {/* Icon is now passed as a component, clone it with new props */}
+      {React.cloneElement(icon, {
+        className: `${icon.props.className} text-blue-600 dark:text-white`,
+      })}
     </div>
     <div>
       <p className="text-sm text-neutral-500 dark:text-gray-300 font-inter">
@@ -126,6 +130,12 @@ function Account() {
       </div>
     );
   }
+
+  // Extract role-specific data directly from the user object
+  const studentProfile = user.student_profile_data;
+  const merchantProfile = user.merchant_profile_data;
+  const tutorProfile = user.tutor_profile_data;
+  const campusAdminProfile = user.campus_admin_profile_data;
 
   return (
     <div className="bg-white dark:bg-gray-900 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
@@ -233,7 +243,7 @@ function Account() {
 
             <ProfileSection title="Account Information">
               <ProfileField
-                icon={<FaEnvelope size={20} className="text-blue-600" />}
+                icon={<FaEnvelope size={20} />}
                 label="Email Address"
                 value={user.email}
               />
@@ -247,18 +257,14 @@ function Account() {
                 </div>
               </div>
               <ProfileField
-                icon={<FaPhone size={20} className="text-blue-600" />}
+                icon={<FaPhone size={20} />}
                 label="Phone Number"
                 value={user.phone_number}
               />
-              <ProfileField
-                icon={<FaGraduationCap size={20} className="text-blue-600" />}
-                label="University"
-                value={user.university}
-              />
+
               {user.university_details && (
                 <ProfileField
-                  icon={<FaBuilding size={20} className="text-blue-600" />}
+                  icon={<FaBuilding size={20} />}
                   label="University Details"
                   value={user.university_details}
                 />
@@ -266,71 +272,137 @@ function Account() {
               <p className="text-xs text-neutral-500 dark:text-gray-300 mt-4 font-inter">
                 Member since {new Date(user.date_joined).toLocaleDateString()}
               </p>
+              {user.bio && (
+                <ProfileField
+                  icon={<FaBook size={20} />}
+                  label="Bio"
+                  value={user.bio}
+                />
+              )}
             </ProfileSection>
           </div>
 
           <div className="lg:w-2/3">
-            {user.role === "student" && (
+            {user.role === "student" && studentProfile && (
               <ProfileSection title="Student Information">
                 <ProfileField
-                  icon={<FaGraduationCap size={20} className="text-blue-600" />}
-                  label="University"
-                  value={user.student_profile?.university_name}
+                  icon={<FaGraduationCap size={20} />}
+                  label="Department"
+                  value={studentProfile.department_name}
                 />
-                {/* Add more student-specific fields */}
+                <ProfileField
+                  icon={<FaCalendarAlt size={20} />}
+                  label="Year"
+                  value={studentProfile.year_in_school}
+                />
+                <ProfileField
+                  icon={<FaUser size={20} />}
+                  label="Enrollment Type"
+                  value={studentProfile.enrollment_type}
+                />
+                {/* Add more student-specific fields from studentProfile as needed */}
               </ProfileSection>
             )}
 
-            {user.role === "merchant" && (
+            {user.role === "merchant" && merchantProfile && (
               <ProfileSection title="Merchant Information">
                 <ProfileField
-                  icon={<FaStore size={20} className="text-blue-600" />}
+                  icon={<FaStore size={20} />}
                   label="Store Name"
-                  value={user.merchant_profile?.store_name}
+                  value={merchantProfile.store_name}
                 />
                 <ProfileField
-                  icon={<FaBuilding size={20} className="text-blue-600" />}
+                  icon={<FaBuilding size={20} />}
                   label="Nearest University"
-                  value={user.merchant_profile?.nearest_university}
+                  value={merchantProfile.nearest_university}
                 />
                 <ProfileField
-                  icon={<FaPhone size={20} className="text-blue-600" />}
+                  icon={<FaPhone size={20} />}
                   label="Business Phone"
-                  value={user.merchant_profile?.phone_number}
+                  value={merchantProfile.phone_number}
                 />
-                {/* Add more merchant-specific fields */}
+                <ProfileField
+                  icon={<FaBook size={20} />} // Using FaBook for TIN, can be changed
+                  label="TIN Number"
+                  value={merchantProfile.tin_number}
+                />
+                {merchantProfile.business_docs && (
+                  <ProfileField
+                    icon={<FaFileAlt size={20} />}
+                    label="Business Documents"
+                    value={
+                      <a
+                        href={merchantProfile.business_docs}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        View Document
+                      </a>
+                    }
+                  />
+                )}
               </ProfileSection>
             )}
 
-            {user.role === "tutor" && (
+            {user.role === "tutor" && tutorProfile && (
               <ProfileSection title="Tutor Information">
                 <ProfileField
-                  icon={<FaBook size={20} className="text-blue-600" />}
+                  icon={<FaBook size={20} />}
                   label="Department"
-                  value={user.tutor_profile?.department}
+                  value={tutorProfile.department_name}
                 />
                 <ProfileField
-                  icon={<FaCalendarAlt size={20} className="text-blue-600" />}
+                  icon={<FaCalendarAlt size={20} />}
                   label="Year"
-                  value={user.tutor_profile?.year}
+                  value={tutorProfile.year_in_school}
                 />
-                {/* Add more tutor-specific fields */}
+                <ProfileField
+                  icon={<FaGraduationCap size={20} />}
+                  label="Expertise"
+                  value={tutorProfile.expertise}
+                />
+                <ProfileField
+                  icon={<FaUserFriends size={20} />}
+                  label="Tutoring Experience"
+                  value={
+                    tutorProfile.experience_years
+                      ? `${tutorProfile.experience_years} years`
+                      : tutorProfile.experience_description
+                  }
+                />
+                {tutorProfile.courses_can_teach &&
+                  tutorProfile.courses_can_teach.length > 0 && (
+                    <ProfileField
+                      icon={<FaBook size={20} />}
+                      label="Courses Can Teach"
+                      value={tutorProfile.courses_can_teach.join(", ")}
+                    />
+                  )}
+                {tutorProfile.availability && (
+                  <ProfileField
+                    icon={<FaCalendarAlt size={20} />}
+                    label="Availability"
+                    value={tutorProfile.availability}
+                  />
+                )}
+                {/* Add more tutor-specific fields from tutorProfile as needed */}
               </ProfileSection>
             )}
 
-            {user.role === "campus_admin" && (
+            {user.role === "campus_admin" && campusAdminProfile && (
               <ProfileSection title="Campus Admin Information">
                 <ProfileField
-                  icon={<FaBuilding size={20} className="text-blue-600" />}
-                  label="University"
-                  value={user.campus_admin_profile?.university}
+                  icon={<FaBuilding size={20} />}
+                  label="University Managed" // Changed label for clarity
+                  value={campusAdminProfile.university_name}
                 />
                 <ProfileField
-                  icon={<FaUserFriends size={20} className="text-blue-600" />}
-                  label="Admin Role"
-                  value={user.campus_admin_profile?.admin_role}
+                  icon={<FaUserFriends size={20} />}
+                  label="Admin Role Title" // Changed label for clarity
+                  value={campusAdminProfile.admin_role}
                 />
-                {/* Add more campus admin-specific fields */}
+                {/* Add more campus_admin-specific fields from campusAdminProfile as needed */}
               </ProfileSection>
             )}
 
