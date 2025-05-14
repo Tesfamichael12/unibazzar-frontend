@@ -329,6 +329,13 @@ export default function Navbar() {
                   >
                     Cart ({cartCount})
                   </Link>
+                  <Link
+                    to="/account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                  >
+                    Profile
+                  </Link>
                   <span className="text-gray-800 dark:text-gray-100 font-semibold">
                     {user.name}
                   </span>
