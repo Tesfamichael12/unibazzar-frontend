@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   LineChart,
   Line,
@@ -9,26 +9,26 @@ import {
   PieChart,
   Pie,
   Cell,
-} from 'recharts';
-import { Users, Calendar, DollarSign } from 'lucide-react';
+} from "recharts";
+import { Users, Calendar, DollarSign } from "lucide-react";
 
 const sessionData = [
-  { month: 'Jan', sessions: 12 },
-  { month: 'Feb', sessions: 9 },
-  { month: 'Mar', sessions: 14 },
-  { month: 'Apr', sessions: 13 },
-  { month: 'May', sessions: 17 },
-  { month: 'Jun', sessions: 15 },
+  { month: "Jan", sessions: 12 },
+  { month: "Feb", sessions: 9 },
+  { month: "Mar", sessions: 14 },
+  { month: "Apr", sessions: 13 },
+  { month: "May", sessions: 17 },
+  { month: "Jun", sessions: 15 },
 ];
 
 const subjectData = [
-  { name: 'Math', value: 30 },
-  { name: 'Programming', value: 25 },
-  { name: 'Languages', value: 20 },
-  { name: 'Science', value: 15 },
+  { name: "Math", value: 30 },
+  { name: "Programming", value: 25 },
+  { name: "Languages", value: 20 },
+  { name: "Science", value: 15 },
 ];
 
-const COLORS = ['#34d399', '#60a5fa', '#fbbf24', '#f87171'];
+const COLORS = ["#34d399", "#60a5fa", "#fbbf24", "#f87171"];
 
 export default function DashboardHome() {
   return (
@@ -38,28 +38,28 @@ export default function DashboardHome() {
         <div className="bg-gray-800 p-4 rounded-xl shadow">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm">Total Sessions</p>
+              <Calendar className="text-green-400" />
+              <p className="text-sm pt-2">Total Sessions</p>
               <p className="text-xl font-bold">64</p>
             </div>
-            <Calendar className="text-green-400" />
           </div>
         </div>
         <div className="bg-gray-800 p-4 rounded-xl shadow">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm">Total Students</p>
+              <Users className="text-blue-400" />
+              <p className="text-sm pt-2">Total Students</p>
               <p className="text-xl font-bold">28</p>
             </div>
-            <Users className="text-blue-400" />
           </div>
         </div>
         <div className="bg-gray-800 p-4 rounded-xl shadow">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm">Earnings</p>
-              <p className="text-xl font-bold">$1,320</p>
+              <DollarSign className="text-yellow-400" />
+              <p className="text-sm pt-2">Earnings</p>
+              <p className="text-xl font-bold">1,320 ETB</p>
             </div>
-            <DollarSign className="text-yellow-400" />
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
-import React from 'react';
-import DashboardHeader from '../components/CampusAdmin/DashboardHeader';
-import FilterBar from '../components/CampusAdmin/FilterBar';
-import ItemList from '../components/CampusAdmin/ItemList';
-import ItemCard from '../components/CampusAdmin/ItemCard';
+import React from "react";
+import DashboardHeader from "../components/CampusAdmin/DashboardHeader";
+import FilterBar from "../components/CampusAdmin/FilterBar";
+import ItemList from "../components/CampusAdmin/ItemList";
+import ItemCard from "../components/CampusAdmin/ItemCard";
 
 export default function AdminDashboard() {
   return (

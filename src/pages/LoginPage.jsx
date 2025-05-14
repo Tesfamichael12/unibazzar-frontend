@@ -93,6 +93,33 @@ const checkStudentProfile = async (userId) => {
   }
 };
 
+// Check if tutor profile exists for a user ID
+const checkTutorProfile = async (userId) => {
+  const url = `/api/users/tutor-profiles/?user=${userId}`;
+  try {
+    const response = await api.get(url);
+    if (response.status >= 200 && response.status < 300) {
+      const data = response.data;
+      if (Array.isArray(data) && data.length > 0) {
+        return true;
+      }
+      if (data && data.results && data.results.length > 0) {
+        return true;
+      }
+      return false;
+    }
+    if (response.status === 404) {
+      return false;
+    }
+    throw new Error(`HTTP error! status: ${response.status}`);
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return false;
+    }
+    throw error;
+  }
+};
+
 function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -176,10 +203,12 @@ function LoginPage() {
               break;
 
             case "tutor":
-              // Check if the user has a profile using profile_id from user object
-              if (user.profile_id) {
+              // Check if tutor has a profile
+              profileExists = await checkTutorProfile(user.id);
+
+              if (profileExists) {
                 setSuccessMessage("Successfully Logged In");
-                navigate("/listings", { replace: true });
+                navigate("/tutor-dashboard", { replace: true });
               } else {
                 setSuccessMessage(
                   "Login successful! Please complete your tutor profile."

@@ -40,6 +40,39 @@ const TutorProfileForm = ({ mode = "create" }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // On mount, if mode is 'create', check if a tutor profile already exists for this user
+    // If so, redirect to dashboard to avoid duplicate profile errors
+    const checkExistingTutorProfile = async () => {
+      if (mode === "create" && user?.id) {
+        try {
+          const url = `/api/users/tutor-profiles/?user=${user.id}`;
+          const response = await import("../../../redux/api/uniBazzarApi").then(
+            (m) => m.default.get(url)
+          );
+          const data = response.data;
+          if (
+            (Array.isArray(data) && data.length > 0) ||
+            (data && data.results && data.results.length > 0)
+          ) {
+            // Profile exists, redirect to dashboard
+            navigate("/tutor-dashboard", { replace: true });
+          }
+        } catch (err) {
+          // Only ignore 404 (not found), rethrow others
+          if (!(err.response && err.response.status === 404)) {
+            // Optionally show an error
+            setError(
+              "Could not verify existing tutor profile. Please try again later."
+            );
+          }
+        }
+      }
+    };
+    checkExistingTutorProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, user, navigate]);
+
+  useEffect(() => {
     // If in edit mode, fetch current profile
     if (mode === "edit" && user?.profile_id) {
       getProfile(user.profile_id);

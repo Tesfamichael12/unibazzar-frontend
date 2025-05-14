@@ -99,6 +99,19 @@ export default function Navbar() {
     { name: "Post", path: "/create" },
   ];
 
+  // Always add Dashboard link for desktop, right after Post
+  let desktopNavLinks = [...navLinks];
+  const dashboardLink = {
+    name: "Dashboard",
+    path: "/dashboard-redirect", // This will be a redirect route
+  };
+  const postIndex = desktopNavLinks.findIndex((link) => link.name === "Post");
+  if (postIndex !== -1) {
+    desktopNavLinks.splice(postIndex + 1, 0, dashboardLink);
+  } else {
+    desktopNavLinks.push(dashboardLink);
+  }
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-xl ${
@@ -132,7 +145,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => (
+            {desktopNavLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
@@ -194,7 +207,7 @@ export default function Navbar() {
                     <FaUserCircle className="text-white text-3xl drop-shadow-lg" />
                   </button>
                   {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-40 rounded-xl bg-white dark:bg-[#0a1535] shadow-2xl ring-1 ring-blue-100/30 dark:ring-blue-900/40 py-2 z-50 animate-fade-in">
+                    <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-[#0a1535] shadow-2xl ring-1 ring-blue-100/30 dark:ring-blue-900/40 py-2 z-50 animate-fade-in">
                       <button
                         onClick={() => {
                           setShowUserMenu(false);
@@ -204,6 +217,28 @@ export default function Navbar() {
                       >
                         Profile
                       </button>
+                      {user.is_tutor && (
+                        <button
+                          onClick={() => {
+                            setShowUserMenu(false);
+                            navigate("/tutor-dashboard");
+                          }}
+                          className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium cursor-pointer"
+                        >
+                          Tutor Dashboard
+                        </button>
+                      )}
+                      {user.is_merchant && (
+                        <button
+                          onClick={() => {
+                            setShowUserMenu(false);
+                            navigate("/merchant-dashboard");
+                          }}
+                          className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium cursor-pointer"
+                        >
+                          Merchant Dashboard
+                        </button>
+                      )}
                       <button
                         onClick={() => {
                           setShowUserMenu(false);
@@ -320,6 +355,13 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
+              <Link
+                to="/dashboard-redirect"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+              >
+                Dashboard
+              </Link>
               {user ? (
                 <>
                   <Link

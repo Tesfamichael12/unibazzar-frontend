@@ -29,6 +29,8 @@ import ThemeToggle from "./components/ui/ThemeToggle";
 import ThankYou from "./pages/ThankYou";
 import ProductDetail from "./pages/ProductDetail";
 import Chatbot from "./components/Chatbot/Chatbot"; // Import the Chatbot
+import DashboardRedirect from "./pages/DashboardRedirect"; // Import DashboardRedirect
+import StudentDashboard from "./pages/StudentDashboard"; // Import StudentDashboard
 
 // Import profile form components
 import StudentProfileForm from "./pages/profile/forms/StudentProfileForm";
@@ -199,7 +201,7 @@ function AppContent() {
             path="/tutor-dashboard"
             element={
               <PrivateRoute requiredRoles={["tutor"]}>
-                <Dashboard />
+                <TutorDashboard />
               </PrivateRoute>
             }
           />
@@ -208,6 +210,15 @@ function AppContent() {
             element={
               <PrivateRoute requiredRoles={["campus_admin"]}>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/dashboard-redirect" element={<DashboardRedirect />} />
+          <Route
+            path="/student-dashboard"
+            element={
+              <PrivateRoute>
+                <StudentDashboard />
               </PrivateRoute>
             }
           />
