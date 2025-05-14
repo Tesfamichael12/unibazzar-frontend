@@ -148,11 +148,7 @@ const Chatbot = () => {
                           : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-bl-none"
                       } font-inter text-sm`}
                     >
-                      {msg.sender === "bot" ? (
-                        <ReactMarkdown>{msg.text}</ReactMarkdown>
-                      ) : (
-                        msg.text
-                      )}
+                      {<ReactMarkdown>{msg.text}</ReactMarkdown>}
                     </div>
                   </motion.div>
                 ))}
