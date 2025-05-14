@@ -48,26 +48,27 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      // Replace with your actual backend endpoint for the chatbot
-      // const response = await api.post('/api/chatbot/', { message: inputValue });
-      // const botResponse = response.data.reply;
-
-      // Mock bot response for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const botResponse = `This is a simulated response to: "${inputValue}"`;
-
-
+      // Make a POST request to the chatbot API endpoint
+      const response = await api.post('/api/chatbot/', { message: newMessage.text }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const botResponse = response.data.reply;
       setMessages((prevMessages) => [
         ...prevMessages,
         { id: Date.now() + 1, text: botResponse, sender: 'bot' },
       ]);
     } catch (error) {
-      console.error('Chatbot API error:', error);
+      let errorMsg = 'Sorry, I encountered an error. Please try again.';
+      if (error.response && error.response.data && error.response.data.detail) {
+        errorMsg = error.response.data.detail;
+      }
       setMessages((prevMessages) => [
         ...prevMessages,
         {
           id: Date.now() + 1,
-          text: 'Sorry, I encountered an error. Please try again.',
+          text: errorMsg,
           sender: 'bot',
         },
       ]);
