@@ -118,9 +118,9 @@ function MerchantProductManagementPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen pt-20">
+    <div className="container mx-auto p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen pt-28">
       {" "}
-      {/* Added pt-20 for top padding */}
+      {/* Changed pt-20 to pt-28 for more top padding */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
           Manage Your Products
@@ -169,9 +169,9 @@ function MerchantProductManagementPage() {
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      {product.images && product.images.length > 0 ? (
+                      {product.photo ? ( // Changed from product.images && product.images.length > 0
                         <img
-                          src={product.images[0].image_url}
+                          src={product.photo} // Changed from product.images[0].image_url
                           alt={product.name}
                           className="w-10 h-10 rounded-md object-cover mr-3"
                         />
