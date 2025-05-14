@@ -142,7 +142,7 @@ const Chatbot = () => {
                     }`}
                   >
                     <div
-                      className={`max-w-[70%] p-3 rounded-lg shadow ${
+                      className={`p-3 rounded-lg shadow ${
                         msg.sender === "user"
                           ? "bg-blue-500 text-white rounded-br-none"
                           : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-bl-none"
