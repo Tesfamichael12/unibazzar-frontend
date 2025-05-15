@@ -95,7 +95,6 @@ const ProductFormModal = ({
       // For now, we assume if no new imageFile, the backend keeps the existing one if 'image' is not part of FormData.
     }
 
-
     // The API for merchant products uses PATCH for updates with image file,
     // and POST for creation with image file.
     // PUT was used before for JSON, but with FormData, PATCH is more conventional for partial updates.
@@ -147,7 +146,7 @@ const ProductFormModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 p-4 pt-20">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
           {productData ? "Edit Product" : "Add New Product"}
@@ -290,7 +289,7 @@ const ProductFormModal = ({
                     alt="Current product"
                     className="h-16 w-16 object-cover rounded-md"
                   />
-                   <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                     To change it, choose a new file above.
                   </p>
                 </div>

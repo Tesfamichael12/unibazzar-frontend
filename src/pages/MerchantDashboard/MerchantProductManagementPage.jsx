@@ -118,16 +118,14 @@ function MerchantProductManagementPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen pt-28">
-      {" "}
-      {/* Changed pt-20 to pt-28 for more top padding */}
+    <div className="container mx-auto bg-gray-50 dark:bg-gray-900 min-h-screen pt-20 pr-5 pl-5">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
           Manage Your Products
         </h1>
         <button
           onClick={handleOpenCreateModal}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center transition duration-150 ease-in-out"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.7)] cursor-pointer"
         >
           <FaPlus className="mr-2" /> Add New Product
         </button>
@@ -192,14 +190,14 @@ function MerchantProductManagementPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
                       onClick={() => handleOpenEditModal(product)}
-                      className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3 p-1"
+                      className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3 p-1 transition duration-300 ease-in-out transform hover:scale-110 hover:drop-shadow-[0_0_12px_rgba(99,102,241,0.7)] cursor-pointer rounded-md"
                       title="Edit Product"
                     >
                       <FaEdit size={18} />
                     </button>
                     <button
                       onClick={() => handleDeleteProduct(product.id)}
-                      className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1"
+                      className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 transition duration-300 ease-in-out transform hover:scale-110 hover:drop-shadow-[0_0_12px_rgba(239,68,68,0.7)] cursor-pointer rounded-md"
                       title="Delete Product"
                     >
                       <FaTrash size={18} />

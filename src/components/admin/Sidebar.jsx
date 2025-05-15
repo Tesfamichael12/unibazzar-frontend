@@ -24,11 +24,18 @@ const Sidebar = ({ userRole }) => {
           {/* Assuming /dashboard is the main dashboard link */}
           {/* Conditional link for Merchants */}
           {userRole === "merchant" && (
-            <SidebarItem
-              icon={<FaTasks />}
-              label="Manage Products"
-              to="/merchant/products"
-            />
+            <>
+              <SidebarItem
+                icon={<FaTasks />}
+                label="Manage Products"
+                to="/merchant/products"
+              />
+              <SidebarItem
+                icon={<FaMoneyCheckAlt />}
+                label="Earnings"
+                to="/merchant/earnings"
+              />
+            </>
           )}
           {/* Links for Admin (or other roles if applicable) - adjust as needed */}
           {(userRole === "admin" || userRole === "campus_admin") && (

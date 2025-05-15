@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion"; // Import motion
 import {
   Upload,
   ShoppingCart,
@@ -39,12 +40,15 @@ function HomePage() {
             </span>
           </h1>
           <p className="text-xl md:text-2xl mb-8">
-            Your one-stop campus marketplace for textbooks, notes, tutoring, and
-            more.
+            Your one-stop campus marketplace for Textbooks, Notes, Services,
+            Products and more.
           </p>
-          <Link
+          <motion.custom // Wrap Link with motion.custom
+            component={Link} // Specify the component to render
             to="/listings"
             className="relative inline-flex items-center justify-center px-10 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-xl transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300/40 group overflow-hidden"
+            whileHover={{ scale: 1.1 }} // Add hover animation
+            transition={{ type: "spring", stiffness: 400, damping: 10 }} // Add transition
           >
             <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 blur-lg animate-pulse"></span>
             <span className="relative z-10 flex items-center gap-2">
@@ -63,7 +67,7 @@ function HomePage() {
               </svg>
               Start Browsing
             </span>
-          </Link>
+          </motion.custom>
         </div>
       </section>
       <CatagorySection />

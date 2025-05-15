@@ -138,7 +138,13 @@ export default function Navbar() {
               animate={{ scale: 1, opacity: 1, rotate: 0 }}
               transition={{ type: "spring", stiffness: 120, damping: 10 }}
             />
-            <span className="hidden sm:inline-block text-xl lg:text-2xl font-bold bg-gradient-to-r from-[#152B67] to-blue-400 bg-clip-text text-transparent animate-gradient-move">
+            <span
+              className="hidden sm:inline-block text-xl lg:text-2xl font-bold bg-gradient-to-r from-[#152B67] to-blue-400 bg-clip-text text-transparent animate-gradient-move"
+              style={{
+                WebkitTextStroke: "0.2px #52D7F8",
+                textStroke: "0.2px #52D7F8",
+              }}
+            >
               UniBazzar
             </span>
           </Link>

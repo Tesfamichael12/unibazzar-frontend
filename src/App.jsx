@@ -14,7 +14,7 @@ import ContactUs from "./pages/ContactUs";
 import CartPage from "./pages/CartPage";
 import Dashboard from "./pages/Dashboard";
 import SimilarItemsPage from "./pages/SimilarItemsPage";
-import TutorDashboard from "./pages/TutorDashboard";
+import TutorDashboard from "./pages/TutorDashboard"; // Ensure this path is correct
 import CampusAdminDashboard from "./pages/CampusAdminDashboard";
 import Chat from "./components/Chat/Chat";
 import { Toaster } from "react-hot-toast";
@@ -32,6 +32,7 @@ import Chatbot from "./components/Chatbot/Chatbot"; // Import the Chatbot
 import DashboardRedirect from "./pages/DashboardRedirect"; // Import DashboardRedirect
 import StudentDashboard from "./pages/StudentDashboard"; // Import StudentDashboard
 import MerchantProductManagementPage from "./pages/MerchantDashboard/MerchantProductManagementPage"; // Import MerchantProductManagementPage
+import MerchantEarningsPage from "./pages/MerchantDashboard/MerchantEarningsPage"; // Import MerchantEarningsPage
 
 // Import profile form components
 import StudentProfileForm from "./pages/profile/forms/StudentProfileForm";
@@ -174,14 +175,7 @@ function AppContent() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/tutordashboard"
-            element={
-              <PrivateRoute>
-                <TutorDashboard />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/tutor-dashboard/*" element={<TutorDashboard />} />
           <Route
             path="/campusadmindashboard"
             element={
@@ -228,6 +222,14 @@ function AppContent() {
             element={
               <PrivateRoute>
                 <StudentDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/merchant/earnings"
+            element={
+              <PrivateRoute requiredRoles={["merchant"]}>
+                <MerchantEarningsPage />
               </PrivateRoute>
             }
           />

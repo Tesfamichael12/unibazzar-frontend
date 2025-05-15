@@ -23,3 +23,8 @@ body {
 .animate-toggle-rotate {
   animation: toggle-rotate 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
+
+.text-stroke-white-thin {
+  -webkit-text-stroke: 0.5px #52d7f8;
+  text-stroke: 0.5px #52d7f8;
+}

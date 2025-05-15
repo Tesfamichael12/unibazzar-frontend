@@ -1,7 +1,7 @@
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import DashboardHome from "../components/TutorDashboard/DashboardHome";
-import MyTutoringServices from "../components/TutorDashboard/MyTutoringServices";
-import Bookings from "../components/TutorDashboard/Bookings";
+import TutorServiceManagementPage from "./TutorDashboard/TutorServiceManagementPage";
+import TutorBookingsPage from "./TutorDashboard/TutorBookingsPage"; // Use the new TutorBookingsPage
 import Earnings from "../components/TutorDashboard/Earnings";
 import {
   FaHome,
@@ -26,9 +26,9 @@ function TutorDashboard() {
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-gray-800 p-6 shadow-lg fixed h-full mt-16 lg:mt-0 pt-20 z-40">
+      <aside className="w-64 bg-white dark:bg-gray-800 p-6 shadow-lg fixed h-full mt-16 lg:mt-0 pt-20 z-10">
         {" "}
-        {/* Added pt-20 and z-40 for top padding and stacking */}
+        {/* Changed z-40 to z-10 */}
         <nav>
           <ul>
             {sidebarLinks.map((link) => (
@@ -66,8 +66,8 @@ function TutorDashboard() {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl">
           <Routes>
             <Route path="/" element={<DashboardHome />} />
-            <Route path="services" element={<MyTutoringServices />} />
-            <Route path="bookings" element={<Bookings />} />
+            <Route path="services" element={<TutorServiceManagementPage />} />
+            <Route path="bookings" element={<TutorBookingsPage />} />
             <Route path="earnings" element={<Earnings />} />
           </Routes>
         </div>

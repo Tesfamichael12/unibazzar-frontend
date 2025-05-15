@@ -4,7 +4,7 @@ import { FaFacebook, FaTwitter, FaInstagram, FaTelegram } from "react-icons/fa";
 function Footer() {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="relative bg-[#0a1535] dark:bg-[#0a1535]/80 backdrop-blur-xl overflow-hidden shadow-2xl z-20">
+    <footer className="relative bg-[#0a1535] dark:bg-[#0a1535]/80 backdrop-blur-xl overflow-hidden shadow-2xl z-20 mt-10">
       {/* Glassmorphic & Glowing Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-blue-400/20 blur-3xl animate-pulse-slow"></div>

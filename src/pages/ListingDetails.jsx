@@ -60,7 +60,11 @@ function ListingDetails() {
   };
 
   if (!product) {
-    return <div className="p-6 pt-20 text-center text-gray-800 dark:text-white">Loading...</div>;
+    return (
+      <div className="p-6 pt-20 text-center text-gray-800 dark:text-white">
+        Loading...
+      </div>
+    );
   }
 
   return (
@@ -79,11 +83,15 @@ function ListingDetails() {
           <h1 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
             {product.title}
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{product.category}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            {product.category}
+          </p>
           <p className="text-blue-600 dark:text-blue-400 font-bold text-xl mb-4">
             ${product.price}
           </p>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">{product.description}</p>
+          <p className="text-gray-700 dark:text-gray-300 mb-6">
+            {product.description}
+          </p>
 
           {/* Add to Cart and Buy Now buttons */}
           <div className="mt-6 flex flex-col gap-4">
