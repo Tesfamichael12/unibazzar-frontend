@@ -22,7 +22,6 @@ function ProfileForm({ onCancel }) {
   const [formData, setFormData] = useState({
     full_name: user?.full_name || "",
     phone_number: "",
-    // Role specific fields will be added conditionally
   });
 
   const [roleFormData, setRoleFormData] = useState({});
@@ -35,7 +34,6 @@ function ProfileForm({ onCancel }) {
     };
   }, [dispatch]);
 
-  // Initialize role-specific form data based on user profile
   useEffect(() => {
     if (!user) return;
 

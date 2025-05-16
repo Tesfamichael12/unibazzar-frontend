@@ -1,4 +1,3 @@
-// src/components/Chat/Chat.jsx
 import React, { useState, useEffect } from "react";
 import Message from "./Message";
 
@@ -6,7 +5,6 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
 
-  // Sample messages for initial display
   useEffect(() => {
     setMessages([
       { sender: "Alice", content: "Hi there!", timestamp: "10:30 AM" },
@@ -18,13 +16,13 @@ const Chat = () => {
     if (messageInput.trim() === "") return;
 
     const newMessage = {
-      sender: "You",  // This would come from the logged-in user's data
+      sender: "You",
       content: messageInput,
       timestamp: new Date().toLocaleTimeString(),
     };
 
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    setMessageInput(""); // Clear input field after sending
+    setMessageInput("");
   };
 
   return (

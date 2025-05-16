@@ -85,11 +85,10 @@ const ServiceFormModal = ({
     setIsLoading(true);
 
     const apiPath = service
-      ? `/api/services/tutor-services/${service.id}/` // Endpoint for updating a service
-      : "/api/services/tutor-services/"; // Endpoint for creating a new service
-    const method = service ? "patch" : "post"; // Use PATCH for updates, POST for creation
+      ? `/api/services/tutor-services/${service.id}/`
+      : "/api/services/tutor-services/";
+    const method = service ? "patch" : "post";
 
-    // Basic validation
     if (!formData.title || !formData.price || !formData.category) {
       toast.error("Title, Category, and Price are required.");
       setIsLoading(false);

@@ -4,11 +4,10 @@ import {
   FaBoxOpen,
   FaMoneyCheckAlt,
   FaTasks,
-} from "react-icons/fa"; // Added FaTasks
-import { Link } from "react-router-dom"; // Import Link
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ userRole }) => {
-  // Added userRole prop
   return (
     <aside className="w-64 h-screen bg-gray-900 text-white fixed top-0 left-0 flex flex-col">
       <div className="text-2xl font-bold p-6 border-b border-gray-700">
@@ -21,8 +20,6 @@ const Sidebar = ({ userRole }) => {
             label="Dashboard"
             to="/dashboard"
           />{" "}
-          {/* Assuming /dashboard is the main dashboard link */}
-          {/* Conditional link for Merchants */}
           {userRole === "merchant" && (
             <>
               <SidebarItem
@@ -37,7 +34,6 @@ const Sidebar = ({ userRole }) => {
               />
             </>
           )}
-          {/* Links for Admin (or other roles if applicable) - adjust as needed */}
           {(userRole === "admin" || userRole === "campus_admin") && (
             <>
               <SidebarItem
@@ -45,22 +41,14 @@ const Sidebar = ({ userRole }) => {
                 label="Listings"
                 to="/admin/listings"
               />{" "}
-              {/* Example admin link */}
-              <SidebarItem
-                icon={<FaUser />}
-                label="Users"
-                to="/admin/users"
-              />{" "}
-              {/* Example admin link */}
+              <SidebarItem icon={<FaUser />} label="Users" to="/admin/users" />{" "}
               <SidebarItem
                 icon={<FaMoneyCheckAlt />}
                 label="Transactions"
                 to="/admin/transactions"
               />{" "}
-              {/* Example admin link */}
             </>
           )}
-          {/* Add other role-specific or common links here */}
         </ul>
       </nav>
       <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
@@ -70,9 +58,7 @@ const Sidebar = ({ userRole }) => {
   );
 };
 
-const SidebarItem = (
-  { icon, label, to } // Added 'to' prop
-) => (
+const SidebarItem = ({ icon, label, to }) => (
   <li>
     <Link
       to={to}

@@ -369,10 +369,18 @@ function SignUpPage() {
             <div>
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-semibold flex justify-center items-center transition duration-300 shadow-md"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-semibold flex justify-center items-center transition duration-300 shadow-md cursor-pointer"
                 disabled={loading}
+                style={{ cursor: loading ? "wait" : "pointer" }}
               >
-                {loading ? <Spinner size="sm" /> : "Create Account"}
+                {loading ? (
+                  <>
+                    <Spinner size="sm" />
+                    <span className="ml-2">Signing up, please wait ...</span>
+                  </>
+                ) : (
+                  "Create Account"
+                )}
               </button>
             </div>
 

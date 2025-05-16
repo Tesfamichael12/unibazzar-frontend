@@ -12,10 +12,8 @@ const ProductFormModal = ({
     name: "",
     description: "",
     price: "",
-    // stock_quantity: "", // Removed
     category_name: "",
-    images: [], // Keep for displaying existing images
-    // image_url_input: "", // Removed, will use imageFile state
+    images: [],
   });
   const [imageFile, setImageFile] = useState(null); // For new image upload
   const [isLoading, setIsLoading] = useState(false);
@@ -27,28 +25,22 @@ const ProductFormModal = ({
         name: productData.name || "",
         description: productData.description || "",
         price: productData.price || "",
-        // stock_quantity: productData.stock_quantity || "", // Removed
         category_name:
           productData.category_name || productData.category?.name || "",
         images: productData.images || [],
-        // image_url_input: // Removed
-        //   productData.images && productData.images.length > 0
         //     ? productData.images[0].image_url
         //     : "",
       });
-      setImageFile(null); // Reset file input when product data changes
+      setImageFile(null);
     } else {
-      // Reset for new product
       setFormData({
         name: "",
         description: "",
         price: "",
-        // stock_quantity: "", // Removed
         category_name: "",
         images: [],
-        // image_url_input: "", // Removed
       });
-      setImageFile(null); // Reset file input for new product
+      setImageFile(null);
     }
   }, [productData, isOpen]);
 
@@ -56,8 +48,7 @@ const ProductFormModal = ({
     const { name, value, files } = e.target;
     if (name === "image_upload") {
       setImageFile(files[0]);
-      // Optionally, clear existing image URL display or show a preview
-      setFormData((prev) => ({ ...prev, images: [] })); // Clear existing images if a new one is chosen
+      setFormData((prev) => ({ ...prev, images: [] }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -79,10 +70,9 @@ const ProductFormModal = ({
     submissionData.append("description", formData.description);
     submissionData.append("price", formData.price);
     submissionData.append("category_name", formData.category_name);
-    // submissionData.append("stock_quantity", parseInt(formData.stock_quantity, 10)); // Removed
 
     if (imageFile) {
-      submissionData.append("image", imageFile); // API expects 'image' for file upload
+      submissionData.append("image", imageFile);
     } else if (productData && formData.images && formData.images.length > 0) {
       // If not uploading a new file, but existing images were there and not cleared,
       // the API might need the existing image URL if it supports keeping it.
@@ -108,18 +98,17 @@ const ProductFormModal = ({
     const url = productData
       ? `${apiBaseUrl}/products/merchant-products/${productData.id}/`
       : `${apiBaseUrl}/products/merchant-products/`;
-    const method = productData ? "PATCH" : "POST"; // Use PATCH for updates with FormData
+    const method = productData ? "PATCH" : "POST";
 
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
-        // "Content-Type": "application/json", // Remove for FormData; browser sets it
       };
 
       const response = await fetch(url, {
         method: method,
         headers: headers,
-        body: submissionData, // Use FormData directly
+        body: submissionData,
       });
 
       if (!response.ok) {
@@ -128,7 +117,7 @@ const ProductFormModal = ({
           .catch(() => ({ detail: "An error occurred." }));
         throw new Error(
           errData.detail ||
-            Object.values(errData).join(", ") || // Handle cases where error is an object of arrays
+            Object.values(errData).join(", ") ||
             `HTTP error! status: ${response.status}`
         );
       }
@@ -214,27 +203,6 @@ const ProductFormModal = ({
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white"
               />
             </div>
-            {/* Stock Quantity Input Removed
-            <div>
-              <label
-                htmlFor="stock_quantity"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                Stock Quantity
-              </label>
-              <input
-                type="number"
-                name="stock_quantity"
-                id="stock_quantity"
-                value={formData.stock_quantity}
-                onChange={handleChange}
-                required
-                min="0"
-                step="1"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-              />
-            </div>
-            */}
           </div>
 
           <div>
@@ -285,7 +253,7 @@ const ProductFormModal = ({
                     Current image:
                   </p>
                   <img
-                    src={formData.images[0].image_url} // Assuming image_url is correct
+                    src={formData.images[0].image_url}
                     alt="Current product"
                     className="h-16 w-16 object-cover rounded-md"
                   />

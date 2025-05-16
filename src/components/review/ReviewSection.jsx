@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 const CONTENT_TYPE_MAP = {
-  merchant: 21, // Update with your actual content type IDs
+  merchant: 21,
   student: 22,
   tutor: 23,
 };
@@ -23,14 +23,11 @@ const ReviewSection = ({ type, objectId }) => {
 
   const contentTypeId = CONTENT_TYPE_MAP[type];
 
-  // Extra validation: warn if contentTypeId or objectId is missing or invalid
   useEffect(() => {
     if (!contentTypeId || !objectId) {
-      // Removed console.warn statement
     }
   }, [contentTypeId, objectId, type]);
 
-  // Fetch reviews for this product/service
   useEffect(() => {
     if (!contentTypeId || !objectId) return;
     setLoading(true);
@@ -53,27 +50,21 @@ const ReviewSection = ({ type, objectId }) => {
       });
   }, [contentTypeId, objectId, token]);
 
-  // Debug: log fetch URL and filtering
   useEffect(() => {
     if (contentTypeId && objectId) {
       const url = `${API_BASE}/api/products/reviews/?content_type=${contentTypeId}&object_id=${objectId}`;
-      // Removed console.log statement
     }
   }, [contentTypeId, objectId]);
 
-  // Debug: log what is being sent on submit
   useEffect(() => {
     if (submitting) {
-      // Removed console.log statement
     }
   }, [submitting]);
 
-  // Handle form input
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Submit new or updated review
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -107,7 +98,7 @@ const ReviewSection = ({ type, objectId }) => {
         setForm({ rating: 5, comment: "" });
         setEditingId(null);
         setSuccess(editingId ? "Review updated!" : "Review submitted!");
-        // Refetch reviews
+        
         return fetch(
           `${API_BASE}/api/products/reviews/?content_type=${contentTypeId}&object_id=${objectId}`,
           {

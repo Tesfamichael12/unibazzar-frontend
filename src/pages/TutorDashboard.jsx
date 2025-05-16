@@ -1,7 +1,7 @@
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import DashboardHome from "../components/TutorDashboard/DashboardHome";
 import TutorServiceManagementPage from "./TutorDashboard/TutorServiceManagementPage";
-import TutorBookingsPage from "./TutorDashboard/TutorBookingsPage"; // Use the new TutorBookingsPage
+import TutorBookingsPage from "./TutorDashboard/TutorBookingsPage";
 import Earnings from "../components/TutorDashboard/Earnings";
 import {
   FaHome,
@@ -49,9 +49,7 @@ function TutorDashboard() {
                     }`}
                 >
                   <span className="text-lg">{link.icon}</span>{" "}
-                  {/* Removed margin class */}
                   <span className="font-medium ml-2">{link.name}</span>{" "}
-                  {/* Added ml-2 to the text span for a small gap */}
                 </Link>
               </li>
             ))}
@@ -62,7 +60,6 @@ function TutorDashboard() {
       {/* Main Content */}
       <main className="flex-1 ml-64 p-8 pt-24 mt-0 lg:mt-0">
         {" "}
-        {/* Added pt-24 for top padding */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl">
           <Routes>
             <Route path="/" element={<DashboardHome />} />

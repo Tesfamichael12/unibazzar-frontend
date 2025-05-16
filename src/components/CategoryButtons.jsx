@@ -1,5 +1,4 @@
 function CategoryButtons({ categories, selectedCategory, onCategoryChange }) {
-  // Add new static categories for consistency
   const staticCategories = [
     "Products",
     "Notes & Textbooks",
@@ -7,7 +6,6 @@ function CategoryButtons({ categories, selectedCategory, onCategoryChange }) {
     "Services",
     "Food",
   ];
-  // Merge static and dynamic categories, avoiding duplicates
   const allCategories = [
     ...staticCategories,
     ...categories.filter(

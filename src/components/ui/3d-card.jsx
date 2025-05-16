@@ -1,9 +1,5 @@
-// src/components/ui/3d-card.jsx
 import { motion } from "framer-motion";
 
-/**
- * Container that adds 3D tilt animation on hover
- */
 export function CardContainer({ children, className = "" }) {
   return (
     <motion.div
@@ -16,10 +12,6 @@ export function CardContainer({ children, className = "" }) {
   );
 }
 
-/**
- * Main card body with padding and shadows
- * - Set to overflow-visible to allow hover elements to show outside
- */
 export function CardBody({ children, className = "" }) {
   return (
     <div
@@ -30,9 +22,6 @@ export function CardBody({ children, className = "" }) {
   );
 }
 
-/**
- * Inner content block with spacing
- */
 export function CardItem({ children, className = "" }) {
   return <div className={`mb-4 ${className}`}>{children}</div>;
 }

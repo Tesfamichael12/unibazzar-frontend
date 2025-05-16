@@ -1,8 +1,5 @@
 import React from "react";
 
-/**
- * Tabs container component
- */
 export const Tabs = ({ children, value, onValueChange, className = "" }) => {
   return (
     <div className={`relative ${className}`}>
@@ -16,9 +13,6 @@ export const Tabs = ({ children, value, onValueChange, className = "" }) => {
   );
 };
 
-/**
- * Tabs list component
- */
 export const TabsList = ({ children, value, onValueChange }) => {
   return (
     <div className="inline-flex rounded-lg bg-gray-100 dark:bg-gray-800 p-1">
@@ -32,9 +26,6 @@ export const TabsList = ({ children, value, onValueChange }) => {
   );
 };
 
-/**
- * Individual tab trigger component
- */
 export const TabsTrigger = React.forwardRef(
   ({ children, value, onValueChange, currentValue }, ref) => {
     const isActive = currentValue === value;

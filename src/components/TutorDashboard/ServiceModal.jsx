@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { X } from "lucide-react";
 
-export default function ServiceModal({ isOpen, onClose, onSave, editingService }) {
+export default function ServiceModal({
+  isOpen,
+  onClose,
+  onSave,
+  editingService,
+}) {
   const [formData, setFormData] = useState({
-    subject: '',
-    description: '',
-    rate: '',
-    status: 'Active',
+    subject: "",
+    description: "",
+    rate: "",
+    status: "Active",
   });
 
   useEffect(() => {
@@ -14,17 +19,17 @@ export default function ServiceModal({ isOpen, onClose, onSave, editingService }
       setFormData(editingService);
     } else {
       setFormData({
-        subject: '',
-        description: '',
-        rate: '',
-        status: 'Active',
+        subject: "",
+        description: "",
+        rate: "",
+        status: "Active",
       });
     }
   }, [editingService]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -49,7 +54,7 @@ export default function ServiceModal({ isOpen, onClose, onSave, editingService }
           <X />
         </button>
         <h2 className="text-xl font-semibold mb-4 text-white">
-          {editingService ? 'Edit Service' : 'Add New Service'}
+          {editingService ? "Edit Service" : "Add New Service"}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -73,7 +78,9 @@ export default function ServiceModal({ isOpen, onClose, onSave, editingService }
             ></textarea>
           </div>
           <div>
-            <label className="block text-sm text-gray-300">Rate (e.g. $20/hr)</label>
+            <label className="block text-sm text-gray-300">
+              Rate (e.g. $20/hr)
+            </label>
             <input
               type="text"
               name="rate"
@@ -99,7 +106,7 @@ export default function ServiceModal({ isOpen, onClose, onSave, editingService }
             type="submit"
             className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded"
           >
-            {editingService ? 'Update Service' : 'Add Service'}
+            {editingService ? "Update Service" : "Add Service"}
           </button>
         </form>
       </div>

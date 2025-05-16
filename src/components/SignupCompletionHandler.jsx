@@ -3,10 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserProfile } from "../redux/slices/authSlice";
 
-/**
- * Component that handles redirecting users to appropriate profile forms
- * based on their account type after successful registration
- */
 const SignupCompletionHandler = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

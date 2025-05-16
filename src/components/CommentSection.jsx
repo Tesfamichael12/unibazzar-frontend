@@ -24,17 +24,8 @@ function CommentSection() {
 
   return (
     <div className="mt-12">
-      {/* <h2 className="text-xl font-semibold text-gray-900 mb-4">
-        Comments ({comments.length})
-      </h2> */}
-
       {/* Comment Input */}
       <form onSubmit={handleCommentSubmit} className="flex space-x-4 mb-6">
-        {/* <img
-          src="https://via.placeholder.com/40"
-          alt="User Avatar"
-          className="w-10 h-10 rounded-full object-cover"
-        /> */}
         <div className="flex-1">
           <input
             value={comment}

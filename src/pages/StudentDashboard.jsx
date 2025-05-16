@@ -1,53 +1,24 @@
-import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import StudentDashboardLayout from "../components/StudentDashboard/StudentDashboardLayout";
+import StudentDashboardHome from "../components/StudentDashboard/StudentDashboardHome";
+import MyListings from "../components/StudentDashboard/MyListings";
+import AddListing from "../components/StudentDashboard/AddListing";
+import MyServices from "../components/StudentDashboard/MyServices";
+import AddService from "../components/StudentDashboard/AddService";
+import StudentSettings from "../components/StudentDashboard/StudentSettings";
 
-const StudentDashboard = () => {
+export default function StudentDashboard() {
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col items-center justify-center p-8">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-2xl text-center">
-        <h1 className="text-3xl font-bold mb-4 text-blue-600 dark:text-blue-400">
-          Student Dashboard
-        </h1>
-        <p className="mb-6 text-lg text-gray-700 dark:text-gray-300">
-          Welcome to your dashboard! Here you can view your activity, manage
-          your listings, and see your recent orders and favorites.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-6 shadow flex flex-col items-center">
-            <span className="text-2xl font-semibold text-blue-700 dark:text-blue-300 mb-2">
-              My Listings
-            </span>
-            <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-              0
-            </span>
-          </div>
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-6 shadow flex flex-col items-center">
-            <span className="text-2xl font-semibold text-blue-700 dark:text-blue-300 mb-2">
-              My Orders
-            </span>
-            <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-              0
-            </span>
-          </div>
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-6 shadow flex flex-col items-center">
-            <span className="text-2xl font-semibold text-blue-700 dark:text-blue-300 mb-2">
-              Favorites
-            </span>
-            <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-              0
-            </span>
-          </div>
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-6 shadow flex flex-col items-center">
-            <span className="text-2xl font-semibold text-blue-700 dark:text-blue-300 mb-2">
-              Messages
-            </span>
-            <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-              0
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route element={<StudentDashboardLayout />}>
+        <Route index element={<StudentDashboardHome />} />
+        <Route path="my-listings" element={<MyListings />} />
+        <Route path="add-listing" element={<AddListing />} />
+        <Route path="my-services" element={<MyServices />} />
+        <Route path="add-service" element={<AddService />} />
+        <Route path="settings" element={<StudentSettings />} />
+        <Route path="*" element={<Navigate to="/student-dashboard" replace />} />
+      </Route>
+    </Routes>
   );
-};
-
-export default StudentDashboard;
+}

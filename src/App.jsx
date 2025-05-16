@@ -218,7 +218,7 @@ function AppContent() {
           />
           <Route path="/dashboard-redirect" element={<DashboardRedirect />} />
           <Route
-            path="/student-dashboard"
+            path="/student-dashboard/*"
             element={
               <PrivateRoute>
                 <StudentDashboard />
