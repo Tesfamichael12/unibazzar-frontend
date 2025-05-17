@@ -27,8 +27,17 @@ export default function MyServices() {
       .finally(() => setLoading(false));
   }, [user?.id]);
 
-  const handleDelete = (id) => {
-    setListings((prev) => prev.filter((item) => item.id !== id));
+  const handleDelete = async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await api.delete(`/api/products/student-products/${id}/`);
+      setListings((prev) => prev.filter((item) => item.id !== id));
+    } catch (err) {
+      setError("Failed to delete service. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (item) => {
@@ -56,28 +65,41 @@ export default function MyServices() {
     }
   };
 
-  const handleEditFormSubmit = (e) => {
+  const handleEditFormSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Send PATCH to backend here
-    setListings((prev) =>
-      prev.map((item) =>
-        item.id === editForm.id
-          ? {
-              ...item,
-              name: editForm.title,
-              price: editForm.price,
-              category: { ...item.category, name: editForm.category },
-              description: editForm.description,
-              phone_number: editForm.phone,
-              tags: editForm.tags,
-              condition: editForm.condition,
-              // photo: editForm.photo ? URL.createObjectURL(editForm.photo) : item.photo,
-            }
-          : item
-      )
-    );
-    setEditModal({ open: false, data: null });
-    setEditForm(null);
+    try {
+      const data = new FormData();
+      data.append("name", editForm.title);
+      data.append("price", editForm.price);
+      data.append("category", editForm.category);
+      data.append("description", editForm.description);
+      data.append("phone_number", editForm.phone);
+      data.append("tags", editForm.tags);
+      data.append("condition", editForm.condition);
+      if (editForm.photo) data.append("photo", editForm.photo);
+      await api.patch(`/api/products/student-products/${editForm.id}/`, data);
+      setListings((prev) =>
+        prev.map((item) =>
+          item.id === editForm.id
+            ? {
+                ...item,
+                name: editForm.title,
+                price: editForm.price,
+                category: { ...item.category, name: editForm.category },
+                description: editForm.description,
+                phone_number: editForm.phone,
+                tags: editForm.tags,
+                condition: editForm.condition,
+                photo: editForm.photo ? URL.createObjectURL(editForm.photo) : item.photo,
+              }
+            : item
+        )
+      );
+      setEditModal({ open: false, data: null });
+      setEditForm(null);
+    } catch (err) {
+      setError("Failed to update service. Please try again.");
+    }
   };
 
   return (
