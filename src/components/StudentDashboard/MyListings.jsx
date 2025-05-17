@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import api from "../../redux/api/uniBazzarApi";
 import AddListing from "./AddListing";
+import ConfirmDeleteModal from "../ui/ConfirmDeleteModal";
+import toast from "react-hot-toast";
 
 export default function MyListings() {
   const { user } = useSelector((state) => state.auth);
@@ -11,6 +13,11 @@ export default function MyListings() {
   const [error, setError] = useState(null);
   const [editModal, setEditModal] = useState({ open: false, data: null });
   const [editForm, setEditForm] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({
+    open: false,
+    id: null,
+    name: "",
+  });
 
   useEffect(() => {
     if (!user?.id) return;
@@ -27,16 +34,26 @@ export default function MyListings() {
       .finally(() => setLoading(false));
   }, [user?.id]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
+    setDeleteModal({
+      open: true,
+      id,
+      name: listings.find((item) => item.id === id)?.name || "this item",
+    });
+  };
+
+  const confirmDelete = async () => {
     setLoading(true);
     setError(null);
     try {
-      await api.delete(`/api/products/student-products/${id}/`);
-      setListings((prev) => prev.filter((item) => item.id !== id));
+      await api.delete(`/api/products/student-products/${deleteModal.id}/`);
+      setListings((prev) => prev.filter((item) => item.id !== deleteModal.id));
+      toast.success("Listing deleted.");
     } catch (err) {
       setError("Failed to delete listing. Please try again.");
     } finally {
       setLoading(false);
+      setDeleteModal({ open: false, id: null, name: "" });
     }
   };
 
@@ -90,11 +107,14 @@ export default function MyListings() {
                 phone_number: editForm.phone,
                 tags: editForm.tags,
                 condition: editForm.condition,
-                photo: editForm.photo ? URL.createObjectURL(editForm.photo) : item.photo,
+                photo: editForm.photo
+                  ? URL.createObjectURL(editForm.photo)
+                  : item.photo,
               }
             : item
         )
       );
+      toast.success("Listing updated.");
       setEditModal({ open: false, data: null });
       setEditForm(null);
     } catch (err) {
@@ -306,6 +326,13 @@ export default function MyListings() {
           </motion.div>
         </div>
       )}
+      {/* Confirm Delete Modal */}
+      <ConfirmDeleteModal
+        isOpen={deleteModal.open}
+        onCancel={() => setDeleteModal({ open: false, id: null, name: "" })}
+        onConfirm={confirmDelete}
+        itemName={deleteModal.name}
+      />
     </motion.div>
   );
 }

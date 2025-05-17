@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import api from "../../redux/api/uniBazzarApi";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 const conditionOptions = [
   { value: "new", label: "New" },
@@ -96,7 +97,7 @@ export default function AddService() {
       // Use the same endpoint as AddListing
       const response = await api.post("/api/products/student-products/", data);
       if (response.status === 201 || response.status === 200) {
-        setSuccess("Service posted successfully!");
+        toast.success("Service posted successfully!");
         setForm({
           name: "",
           price: "",

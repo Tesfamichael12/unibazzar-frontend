@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import api from "../../redux/api/uniBazzarApi";
 import ListingEditModal from "./ListingEditModal";
+import ConfirmDeleteModal from "../ui/ConfirmDeleteModal";
+import toast from "react-hot-toast";
 
 export default function MyServices() {
   const { user } = useSelector((state) => state.auth);
@@ -11,6 +13,11 @@ export default function MyServices() {
   const [error, setError] = useState(null);
   const [editModal, setEditModal] = useState({ open: false, data: null });
   const [editForm, setEditForm] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({
+    open: false,
+    id: null,
+    name: "",
+  });
 
   useEffect(() => {
     if (!user?.id) return;
@@ -27,16 +34,26 @@ export default function MyServices() {
       .finally(() => setLoading(false));
   }, [user?.id]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
+    setDeleteModal({
+      open: true,
+      id,
+      name: listings.find((item) => item.id === id)?.name || "this service",
+    });
+  };
+
+  const confirmDelete = async () => {
     setLoading(true);
     setError(null);
     try {
-      await api.delete(`/api/products/student-products/${id}/`);
-      setListings((prev) => prev.filter((item) => item.id !== id));
+      await api.delete(`/api/products/student-products/${deleteModal.id}/`);
+      setListings((prev) => prev.filter((item) => item.id !== deleteModal.id));
+      toast.success("Service deleted.");
     } catch (err) {
       setError("Failed to delete service. Please try again.");
     } finally {
       setLoading(false);
+      setDeleteModal({ open: false, id: null, name: "" });
     }
   };
 
@@ -90,11 +107,14 @@ export default function MyServices() {
                 phone_number: editForm.phone,
                 tags: editForm.tags,
                 condition: editForm.condition,
-                photo: editForm.photo ? URL.createObjectURL(editForm.photo) : item.photo,
+                photo: editForm.photo
+                  ? URL.createObjectURL(editForm.photo)
+                  : item.photo,
               }
             : item
         )
       );
+      toast.success("Service updated.");
       setEditModal({ open: false, data: null });
       setEditForm(null);
     } catch (err) {
@@ -142,10 +162,21 @@ export default function MyServices() {
                   </span>
                   <span>Category: {item.category?.name}</span>
                   <span>Condition: {item.condition}</span>
+                  {item.status && <span>Status: {item.status}</span>}
                 </div>
                 <div className="text-base text-gray-400 dark:text-gray-400 mt-1 flex flex-wrap gap-4">
                   <span>Phone: {item.phone_number}</span>
                   <span>Tags: {item.tags}</span>
+                  {item.created_at && (
+                    <span>
+                      Created: {new Date(item.created_at).toLocaleDateString()}
+                    </span>
+                  )}
+                  {item.updated_at && (
+                    <span>
+                      Updated: {new Date(item.updated_at).toLocaleDateString()}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -306,6 +337,13 @@ export default function MyServices() {
           </motion.div>
         </div>
       )}
+      {/* Confirm Delete Modal */}
+      <ConfirmDeleteModal
+        isOpen={deleteModal.open}
+        onCancel={() => setDeleteModal({ open: false, id: null, name: "" })}
+        onConfirm={confirmDelete}
+        itemName={deleteModal.name}
+      />
     </motion.div>
   );
 }

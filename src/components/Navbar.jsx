@@ -11,6 +11,7 @@ import { logoutUser } from "../redux/slices/authSlice";
 import { IoMoon, IoSunny } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaUserCircle } from "react-icons/fa";
+import ServiceModal from "./TutorDashboard/ServiceModal";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
+  const [showServiceModal, setShowServiceModal] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userMenuRef = useRef(null);
@@ -91,12 +93,16 @@ export default function Navbar() {
       });
   };
 
+  // Replace Post button logic for tutors
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Marketplace", path: "/listings" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
-    { name: "Post", path: "/create" },
+    // For tutors, Post redirects to My Services page
+    user && user.is_tutor
+      ? { name: "Post", onClick: () => navigate("/tutor-dashboard/services") }
+      : { name: "Post", path: "/create" },
   ];
 
   // Always add Dashboard link for desktop, right after Post
@@ -151,16 +157,28 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
-            {desktopNavLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="relative text-gray-800 dark:text-gray-200 font-medium px-2 py-1 transition group hover:text-blue-500"
-              >
-                {link.name}
-                <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 rounded-full"></span>
-              </Link>
-            ))}
+            {desktopNavLinks.map((link) =>
+              link.onClick ? (
+                <button
+                  key={link.name}
+                  onClick={link.onClick}
+                  className="relative text-gray-800 dark:text-gray-200 font-medium px-2 py-1 transition group hover:text-blue-500 cursor-pointer bg-transparent border-none"
+                  type="button"
+                >
+                  {link.name}
+                  <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 rounded-full"></span>
+                </button>
+              ) : (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className="relative text-gray-800 dark:text-gray-200 font-medium px-2 py-1 transition group hover:text-blue-500"
+                >
+                  {link.name}
+                  <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 rounded-full"></span>
+                </Link>
+              )
+            )}
             <button
               onClick={() => {
                 setIsToggling(true);
@@ -212,50 +230,64 @@ export default function Navbar() {
                   >
                     <FaUserCircle className="text-white text-3xl drop-shadow-lg" />
                   </button>
-                  {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-[#0a1535] shadow-2xl ring-1 ring-blue-100/30 dark:ring-blue-900/40 py-2 z-50 animate-fade-in">
-                      <button
-                        onClick={() => {
-                          setShowUserMenu(false);
-                          navigate("/account");
+                  <AnimatePresence>
+                    {showUserMenu && (
+                      <motion.div
+                        key="user-menu"
+                        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 22,
                         }}
-                        className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium cursor-pointer"
+                        className="absolute right-0 mt-2 w-52 rounded-xl bg-white dark:bg-[#0a1535] shadow-2xl ring-1 ring-blue-100/30 dark:ring-blue-900/40 z-50 p-4 flex flex-col gap-2"
+                        style={{ minWidth: 180 }}
                       >
-                        Profile
-                      </button>
-                      {user.is_tutor && (
                         <button
                           onClick={() => {
                             setShowUserMenu(false);
-                            navigate("/tutor-dashboard");
+                            navigate("/account");
                           }}
                           className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium cursor-pointer"
                         >
-                          Tutor Dashboard
+                          Profile
                         </button>
-                      )}
-                      {user.is_merchant && (
+                        {user.is_tutor && (
+                          <button
+                            onClick={() => {
+                              setShowUserMenu(false);
+                              navigate("/tutor-dashboard");
+                            }}
+                            className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium cursor-pointer"
+                          >
+                            Tutor Dashboard
+                          </button>
+                        )}
+                        {user.is_merchant && (
+                          <button
+                            onClick={() => {
+                              setShowUserMenu(false);
+                              navigate("/merchant-dashboard");
+                            }}
+                            className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium cursor-pointer"
+                          >
+                            Merchant Dashboard
+                          </button>
+                        )}
                         <button
                           onClick={() => {
                             setShowUserMenu(false);
-                            navigate("/merchant-dashboard");
+                            handleLogout();
                           }}
-                          className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors font-medium cursor-pointer"
+                          className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors font-medium cursor-pointer"
                         >
-                          Merchant Dashboard
+                          Logout
                         </button>
-                      )}
-                      <button
-                        onClick={() => {
-                          setShowUserMenu(false);
-                          handleLogout();
-                        }}
-                        className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors font-medium cursor-pointer"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </>
             ) : (
@@ -419,6 +451,14 @@ export default function Navbar() {
           </Dialog.Panel>
         </Dialog>
       </Transition>
+      {/* ServiceModal for tutors' Post button */}
+      {showServiceModal && (
+        <ServiceModal
+          isOpen={showServiceModal}
+          onClose={() => setShowServiceModal(false)}
+          onSave={() => setShowServiceModal(false)}
+        />
+      )}
     </nav>
   );
 }

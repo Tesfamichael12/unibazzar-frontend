@@ -1,29 +1,46 @@
-import React, { useState } from "react";
-import { Pencil, Trash2, PlusCircle } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
+import { CardContainer, CardBody, CardItem } from "../ui/3d-card";
+import {
+  Pencil,
+  Trash2,
+  PlusCircle,
+  Phone,
+  BookOpen,
+  BadgeDollarSign,
+  University,
+} from "lucide-react";
 import toast from "react-hot-toast";
-import ServiceModal from "./ServiceModal"; // Ensure the path is correct
-
-const initialServices = [
-  {
-    id: 1,
-    subject: "Mathematics",
-    description: "Algebra, Calculus, Geometry for university level.",
-    rate: "$20/hr",
-    status: "Active",
-  },
-  {
-    id: 2,
-    subject: "Python Programming",
-    description: "Beginner to intermediate Python with projects.",
-    rate: "$25/hr",
-    status: "Paused",
-  },
-];
+import api from "../../redux/api/uniBazzarApi";
+import ServiceModal from "./ServiceModal";
+import ConfirmDeleteModal from "../ui/ConfirmDeleteModal";
+import Spinner from "../ui/Spinner";
 
 export default function MyTutoringServices() {
-  const [services, setServices] = useState(initialServices);
+  const { user } = useSelector((state) => state.auth);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({
+    open: false,
+    id: null,
+    name: "",
+  });
+
+  useEffect(() => {
+    if (!user?.id) return;
+    setLoading(true);
+    setError(null);
+    api
+      .get(`/api/users/${user.id}/listings/`)
+      .then((res) => {
+        setServices(res.data.tutor_services || []);
+      })
+      .finally(() => setLoading(false));
+  }, [user?.id]);
 
   const handleAdd = () => {
     setEditingService(null);
@@ -35,100 +52,185 @@ export default function MyTutoringServices() {
     setIsModalOpen(true);
   };
 
-  const handleSave = (serviceData) => {
-    if (editingService) {
-      // Update
-      setServices((prev) =>
-        prev.map((s) =>
-          s.id === editingService.id ? { ...serviceData, id: s.id } : s
-        )
+  const handleSave = async (serviceData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      let response;
+      if (editingService) {
+        response = await api.patch(
+          `/api/products/tutor-services/${editingService.id}/`,
+          serviceData
+        );
+      } else {
+        response = await api.post("/api/products/tutor-services/", serviceData);
+      }
+      toast.success(
+        `Service ${editingService ? "updated" : "added"} successfully!`
       );
-      toast.success("Service updated successfully!");
-    } else {
-      // Add
-      const newService = {
-        ...serviceData,
-        id: Date.now(),
-      };
-      setServices((prev) => [...prev, newService]);
-      toast.success("Service added successfully!");
+      // Refresh list
+      const res = await api.get(`/api/users/${user.id}/listings/`);
+      setServices(res.data.tutor_services || []);
+      setIsModalOpen(false);
+    } catch (err) {
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = (id) => {
-    if (confirm("Are you sure you want to delete this service?")) {
-      setServices((prev) => prev.filter((s) => s.id !== id));
+    const service = services.find((s) => s.id === id);
+    setDeleteModal({
+      open: true,
+      id,
+      name: service?.subject || "this service",
+    });
+  };
+
+  const confirmDelete = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await api.delete(`/api/products/tutor-services/${deleteModal.id}/`);
+      setServices((prev) => prev.filter((s) => s.id !== deleteModal.id));
       toast.success("Service deleted.");
+    } catch (err) {
+    } finally {
+      setLoading(false);
+      setDeleteModal({ open: false, id: null, name: "" });
     }
   };
 
   return (
-    <div className="p-6 text-white">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">My Tutoring Services</h2>
-        <button
+    <div className="p-6 min-h-screen bg-white dark:bg-gray-900">
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white drop-shadow-lg">
+          My Tutoring Services
+        </h2>
+        <motion.button
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.96 }}
           onClick={handleAdd}
-          className="flex items-center gap-2 bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600 transition"
+          className="flex items-center gap-2 bg-gradient-to-r from-green-400 to-green-600 px-5 py-2 rounded-xl shadow-lg hover:from-green-500 hover:to-green-700 transition font-semibold text-lg text-white cursor-pointer"
         >
-          <PlusCircle size={18} />
-          Add Service
-        </button>
+          <PlusCircle size={22} />
+          Add Tutoring Service
+        </motion.button>
       </div>
-
-      <div className="overflow-x-auto bg-gray-800 p-4 rounded-xl shadow">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="text-gray-400 border-b border-gray-700">
-              <th className="py-2">Subject</th>
-              <th>Description</th>
-              <th>Rate</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {services.map((service) => (
-              <tr key={service.id} className="border-b border-gray-700">
-                <td className="py-2">{service.subject}</td>
-                <td>{service.description}</td>
-                <td>{service.rate}</td>
-                <td>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      service.status === "Active"
-                        ? "bg-green-600 text-white"
-                        : "bg-yellow-500 text-black"
-                    }`}
-                  >
-                    {service.status}
-                  </span>
-                </td>
-                <td className="space-x-2">
-                  <button
-                    className="text-blue-400 hover:text-blue-300"
-                    onClick={() => handleEdit(service)}
-                  >
-                    <Pencil size={18} />
-                  </button>
-                  <button
-                    className="text-red-400 hover:text-red-300"
-                    onClick={() => handleDelete(service.id)}
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {loading && <Spinner size="lg" />}
+      {error && (
+        <div className="text-red-600 dark:text-red-400 mb-4 font-semibold text-lg">
+          {error}
+        </div>
+      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <AnimatePresence>
+          {services.map((service) => (
+            <motion.div
+              key={service.id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{ type: "spring", stiffness: 120, damping: 18 }}
+            >
+              <CardContainer className="hover:shadow-2xl group">
+                <CardBody className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl overflow-hidden relative flex flex-col h-full">
+                  <div className="relative h-44 w-full rounded-xl overflow-hidden mb-4">
+                    <img
+                      src={service.banner_photo}
+                      alt={
+                        service.description?.slice(0, 20) || "Service Banner"
+                      }
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <CardItem>
+                    <div className="flex items-center gap-2 mb-2">
+                      <BookOpen
+                        className="text-blue-500 dark:text-blue-300"
+                        size={20}
+                      />
+                      <span className="text-lg font-bold text-gray-900 dark:text-white">
+                        {service.category?.name || "Tutoring"}
+                      </span>
+                    </div>
+                    <div className="text-xl font-semibold mb-1 text-gray-900 dark:text-white">
+                      {service.description}
+                    </div>
+                  </CardItem>
+                  <CardItem>
+                    <div className="flex flex-col gap-1 text-gray-800 dark:text-gray-200 text-sm">
+                      <div className="flex items-center gap-2">
+                        <BadgeDollarSign
+                          className="text-green-500 dark:text-green-300"
+                          size={18}
+                        />
+                        <span className="font-bold">Rate:</span>
+                        <span className="text-green-700 dark:text-green-200">
+                          {service.price} ETB/hr
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Phone
+                          className="text-blue-600 dark:text-blue-300"
+                          size={18}
+                        />
+                        <span className="font-bold">Phone:</span>
+                        <span>{service.phone_number}</span>
+                      </div>
+                      {service.university && (
+                        <div className="flex items-center gap-2">
+                          <University
+                            className="text-blue-600 dark:text-blue-300"
+                            size={18}
+                          />
+                          <span className="font-bold">University:</span>
+                          <span>{service.university}</span>
+                        </div>
+                      )}
+                    </div>
+                  </CardItem>
+                  <div className="flex gap-3 mt-auto pt-4">
+                    <motion.button
+                      whileHover={{ scale: 1.15, backgroundColor: "#2563eb" }}
+                      whileTap={{ scale: 0.95 }}
+                      className="p-2 rounded-full bg-blue-700 hover:bg-blue-800 text-white shadow-lg transition cursor-pointer"
+                      onClick={() => handleEdit(service)}
+                      title="Edit Service"
+                      type="button"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <Pencil size={20} />
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.15, backgroundColor: "#dc2626" }}
+                      whileTap={{ scale: 0.95 }}
+                      className="p-2 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-lg transition cursor-pointer"
+                      onClick={() => handleDelete(service.id)}
+                      title="Delete Service"
+                      type="button"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <Trash2 size={20} />
+                    </motion.button>
+                  </div>
+                </CardBody>
+              </CardContainer>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
-
-      {/* Add/Edit Modal */}
       <ServiceModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}
         editingService={editingService}
+      />
+      <ConfirmDeleteModal
+        isOpen={deleteModal.open}
+        onCancel={() => setDeleteModal({ open: false, id: null, name: "" })}
+        onConfirm={confirmDelete}
+        itemName={deleteModal.name}
       />
     </div>
   );

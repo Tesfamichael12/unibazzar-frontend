@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import api from "../../redux/api/uniBazzarApi";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 const conditionOptions = [
   { value: "new", label: "New" },
@@ -95,7 +96,7 @@ export default function AddListing() {
       if (form.photo) data.append("photo", form.photo);
       const response = await api.post("/api/products/student-products/", data);
       if (response.status === 201 || response.status === 200) {
-        setSuccess("Listing posted successfully!");
+        toast.success("Listing posted successfully!");
         setForm({
           name: "",
           price: "",

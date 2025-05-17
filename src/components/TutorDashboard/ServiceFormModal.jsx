@@ -85,8 +85,8 @@ const ServiceFormModal = ({
     setIsLoading(true);
 
     const apiPath = service
-      ? `/api/services/tutor-services/${service.id}/`
-      : "/api/services/tutor-services/";
+      ? `/api/products/tutor-services/${service.id}/`
+      : "/api/products/tutor-services/";
     const method = service ? "patch" : "post";
 
     if (!formData.title || !formData.price || !formData.category) {
