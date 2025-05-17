@@ -17,7 +17,10 @@ export default function StudentDashboard() {
         <Route path="my-services" element={<MyServices />} />
         <Route path="add-service" element={<AddService />} />
         <Route path="settings" element={<StudentSettings />} />
-        <Route path="*" element={<Navigate to="/student-dashboard" replace />} />
+        <Route
+          path="*"
+          element={<Navigate to="/student-dashboard" replace />}
+        />
       </Route>
     </Routes>
   );
