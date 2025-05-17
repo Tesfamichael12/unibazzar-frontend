@@ -34,7 +34,7 @@ export default function DashboardHome() {
   return (
     <div className="p-6 space-y-6 text-white">
       {/* Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full max-w-full overflow-x-auto">
         <div className="bg-gray-800 p-4 rounded-xl shadow">
           <div className="flex justify-between items-center">
             <div>
@@ -121,31 +121,45 @@ export default function DashboardHome() {
       {/* Recent Bookings */}
       <div className="bg-gray-800 p-4 rounded-xl shadow">
         <h3 className="text-lg mb-4">Recent Bookings</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="text-gray-400 border-b border-gray-700">
-                <th className="py-2">Student</th>
-                <th>Subject</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Status</th>
+        <div className="overflow-x-auto rounded-lg shadow mb-6 w-full max-w-full">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+            <thead className="bg-gray-100 dark:bg-gray-700">
+              <tr>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  Student
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  Subject
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  Date
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  Time
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                  Status
+                </th>
               </tr>
             </thead>
-            <tbody>
-              <tr className="border-b border-gray-700">
-                <td className="py-2">Sara Meles</td>
-                <td>Programming</td>
-                <td>2025-05-02</td>
-                <td>10:00 AM</td>
-                <td className="text-green-400">Confirmed</td>
+            <tbody className="bg-white dark:bg-gray-800">
+              <tr className="hover:bg-blue-50 dark:hover:bg-gray-700 transition">
+                <td className="px-4 py-2 whitespace-nowrap">Sara Meles</td>
+                <td className="px-4 py-2 whitespace-nowrap">Programming</td>
+                <td className="px-4 py-2 whitespace-nowrap">2025-05-02</td>
+                <td className="px-4 py-2 whitespace-nowrap">10:00 AM</td>
+                <td className="px-4 py-2 whitespace-nowrap text-green-400">
+                  Confirmed
+                </td>
               </tr>
-              <tr>
-                <td className="py-2">Jonas Alemu</td>
-                <td>Math</td>
-                <td>2025-05-01</td>
-                <td>2:00 PM</td>
-                <td className="text-yellow-400">Pending</td>
+              <tr className="hover:bg-blue-50 dark:hover:bg-gray-700 transition">
+                <td className="px-4 py-2 whitespace-nowrap">Jonas Alemu</td>
+                <td className="px-4 py-2 whitespace-nowrap">Math</td>
+                <td className="px-4 py-2 whitespace-nowrap">2025-05-01</td>
+                <td className="px-4 py-2 whitespace-nowrap">2:00 PM</td>
+                <td className="px-4 py-2 whitespace-nowrap text-yellow-400">
+                  Pending
+                </td>
               </tr>
             </tbody>
           </table>

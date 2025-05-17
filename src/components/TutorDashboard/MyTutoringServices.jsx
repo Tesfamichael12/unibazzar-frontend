@@ -102,7 +102,7 @@ export default function MyTutoringServices() {
   };
 
   return (
-    <div className="p-3 sm:p-6 min-h-screen bg-transparent">
+    <div className="p-3 sm:pt-6 min-h-screen bg-transparent">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4 sm:gap-0">
         <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white drop-shadow-lg">
           My Tutoring Services
@@ -115,7 +115,7 @@ export default function MyTutoringServices() {
         >
           <PlusCircle size={20} className="sm:hidden" />
           <PlusCircle size={22} className="hidden sm:inline" />
-          <span className="hidden xs:inline">Add Tutoring Service</span>
+          <span className="hidden lg:inline">Add Tutoring Service</span>
         </motion.button>
       </div>
       {loading && <Spinner size="lg" />}

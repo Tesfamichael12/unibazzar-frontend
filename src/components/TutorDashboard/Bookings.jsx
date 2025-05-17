@@ -1,107 +1,108 @@
-import React, { useState } from 'react';
-import { CheckCircle, XCircle, Clock, Check } from 'lucide-react';
+import React from "react";
 
-const initialBookings = [
+const bookings = [
   {
     id: 1,
-    student: 'Sara Meles',
-    subject: 'Math',
-    date: '2025-05-04',
-    time: '10:00 AM',
-    status: 'Pending',
+    student: "Sara Meles",
+    subject: "Math",
+    date: "2025-05-04",
+    time: "10:00 AM",
+    status: "Pending",
   },
   {
     id: 2,
-    student: 'Jonas Alemu',
-    subject: 'Python Programming',
-    date: '2025-05-05',
-    time: '2:00 PM',
-    status: 'Confirmed',
+    student: "Jonas Alemu",
+    subject: "Python Programming",
+    date: "2025-05-05",
+    time: "2:00 PM",
+    status: "Confirmed",
+  },
+  {
+    id: 3,
+    student: "Abel T.",
+    subject: "Math",
+    date: "2025-05-10",
+    time: "9:00 AM",
+    status: "Confirmed",
+  },
+  {
+    id: 4,
+    student: "Sara M.",
+    subject: "English",
+    date: "2025-05-12",
+    time: "11:00 AM",
+    status: "Pending",
+  },
+  {
+    id: 5,
+    student: "Liya K.",
+    subject: "Programming",
+    date: "2025-05-13",
+    time: "1:00 PM",
+    status: "Completed",
+  },
+  {
+    id: 6,
+    student: "Miki B.",
+    subject: "Science",
+    date: "2025-05-14",
+    time: "3:00 PM",
+    status: "Cancelled",
+  },
+  {
+    id: 7,
+    student: "Robel S.",
+    subject: "Math",
+    date: "2025-05-15",
+    time: "4:00 PM",
+    status: "Confirmed",
   },
 ];
 
 export default function Bookings() {
-  const [bookings, setBookings] = useState(initialBookings);
-
-  const updateStatus = (id, newStatus) => {
-    setBookings((prev) =>
-      prev.map((booking) =>
-        booking.id === id ? { ...booking, status: newStatus } : booking
-      )
-    );
-  };
-
-  const getStatusBadge = (status) => {
-    const baseClass = "px-2 py-1 rounded-full text-xs font-semibold";
-    switch (status) {
-      case 'Pending':
-        return <span className={`${baseClass} bg-yellow-500 text-black`}>{status}</span>;
-      case 'Confirmed':
-        return <span className={`${baseClass} bg-blue-600`}>{status}</span>;
-      case 'Completed':
-        return <span className={`${baseClass} bg-green-600`}>{status}</span>;
-      case 'Cancelled':
-        return <span className={`${baseClass} bg-red-500`}>{status}</span>;
-      default:
-        return status;
-    }
-  };
+  const columns = ["Student", "Subject", "Date", "Time", "Status"];
 
   return (
     <div className="p-6 text-white">
-      <h2 className="text-2xl font-bold mb-4">My Bookings</h2>
+      <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
+        Bookings
+      </h2>
 
-      <div className="overflow-x-auto bg-gray-800 p-4 rounded-xl shadow">
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="text-gray-400 border-b border-gray-700">
-              <th className="py-2">Student</th>
-              <th>Subject</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Status</th>
-              <th>Actions</th>
+      {/* Responsive bookings table */}
+      <div className="overflow-x-auto rounded-lg shadow mb-8 w-full max-w-full">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+          <thead className="bg-gray-100 dark:bg-gray-700">
+            <tr>
+              {columns.map((col) => (
+                <th
+                  key={col}
+                  className="px-4 py-2 text-left font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap"
+                >
+                  {col}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody>
-            {bookings.map((booking) => (
-              <tr key={booking.id} className="border-b border-gray-700">
-                <td className="py-2">{booking.student}</td>
-                <td>{booking.subject}</td>
-                <td>{booking.date}</td>
-                <td>{booking.time}</td>
-                <td>{getStatusBadge(booking.status)}</td>
-                <td className="space-x-2">
-                  {booking.status === 'Pending' && (
-                    <>
-                      <button
-                        onClick={() => updateStatus(booking.id, 'Confirmed')}
-                        className="text-green-400 hover:text-green-300"
-                        title="Accept"
-                      >
-                        <CheckCircle size={18} />
-                      </button>
-                      <button
-                        onClick={() => updateStatus(booking.id, 'Cancelled')}
-                        className="text-red-400 hover:text-red-300"
-                        title="Reject"
-                      >
-                        <XCircle size={18} />
-                      </button>
-                    </>
-                  )}
-                  {booking.status === 'Confirmed' && (
-                    <button
-                      onClick={() => updateStatus(booking.id, 'Completed')}
-                      className="text-blue-400 hover:text-blue-300"
-                      title="Mark as Completed"
-                    >
-                      <Check size={18} />
-                    </button>
-                  )}
-                  {booking.status === 'Completed' && (
-                    <Clock size={18} className="text-gray-500" title="Session done" />
-                  )}
+          <tbody className="bg-white dark:bg-gray-800">
+            {bookings.map((row, idx) => (
+              <tr
+                key={row.id}
+                className="hover:bg-blue-50 dark:hover:bg-gray-700 transition"
+              >
+                <td className="px-4 py-2 text-gray-900 dark:text-white">
+                  {row.student}
+                </td>
+                <td className="px-4 py-2 text-gray-900 dark:text-white">
+                  {row.subject}
+                </td>
+                <td className="px-4 py-2 text-gray-900 dark:text-white">
+                  {row.date}
+                </td>
+                <td className="px-4 py-2 text-gray-900 dark:text-white">
+                  {row.time}
+                </td>
+                <td className="px-4 py-2 text-gray-900 dark:text-white">
+                  {row.status}
                 </td>
               </tr>
             ))}

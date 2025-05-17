@@ -9,11 +9,11 @@ import {
 } from "recharts";
 
 const sessionEarnings = [
-  { id: 1, subject: "Mathematics", date: "2025-04-01", amount: 500 },
-  { id: 2, subject: "Python", date: "2025-04-03", amount: 650 },
-  { id: 3, subject: "Math", date: "2025-04-06", amount: 500 },
-  { id: 4, subject: "Data Structures", date: "2025-04-10", amount: 300 },
-  { id: 5, subject: "Python", date: "2025-04-13", amount: 650 },
+  { date: "2025-05-01", subject: "Math", amount: "200 ETB" },
+  { date: "2025-05-02", subject: "Programming", amount: "300 ETB" },
+  { date: "2025-05-03", subject: "Science", amount: "150 ETB" },
+  { date: "2025-05-04", subject: "Math", amount: "250 ETB" },
+  { date: "2025-05-05", subject: "English", amount: "180 ETB" },
 ];
 
 const monthlySummary = [
@@ -26,46 +26,85 @@ const monthlySummary = [
 
 export default function Earnings() {
   const totalEarnings = sessionEarnings.reduce(
-    (acc, session) => acc + session.amount,
+    (acc, session) => acc + parseInt(session.amount),
     0
   );
 
+  const summary = [
+    { label: "Total Earnings", value: `${totalEarnings} ETB` },
+    { label: "Sessions This Month", value: "15" },
+    { label: "Average Session", value: "800 ETB" },
+    { label: "Top Subject", value: "Python" },
+  ];
+
+  const columns = ["date", "subject", "amount"];
+
   return (
     <div className="p-6 text-white">
-      <h2 className="text-2xl font-bold mb-4">Earnings</h2>
-
-      {/* Total Earnings */}
+      <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
+        Earnings
+      </h2>
       <div className="bg-gray-800 p-6 rounded-xl shadow mb-6">
         <p className="text-lg">Total Earnings:</p>
         <h3 className="text-3xl font-semibold text-green-400">
           {totalEarnings} ETB
         </h3>
       </div>
-
-      {/* Earnings per Session */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full max-w-full overflow-x-auto">
+        {summary.map((item) => (
+          <div
+            key={item.label}
+            className="bg-green-50 dark:bg-gray-700 rounded-xl p-4 flex flex-col items-start shadow transition hover:shadow-lg min-w-0 w-full"
+          >
+            <div className="text-2xl font-bold text-green-600 dark:text-green-300 mb-1">
+              <span className="text-lg font-bold text-gray-900 dark:text-white">
+                {item.value}
+              </span>
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="text-gray-700 dark:text-gray-200">
+                {item.label}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
       <div className="bg-gray-800 p-4 rounded-xl shadow mb-6">
         <h3 className="text-xl font-semibold mb-2">Sessions</h3>
-        <table className="w-full text-sm">
-          <thead className="text-gray-400 border-b border-gray-700">
-            <tr>
-              <th className="py-2">Date</th>
-              <th>Subject</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sessionEarnings.map((session) => (
-              <tr key={session.id} className="border-b border-gray-700">
-                <td className="py-2">{session.date}</td>
-                <td>{session.subject}</td>
-                <td className="text-green-400">{session.amount} ETB</td>
+        <div className="overflow-x-auto rounded-lg shadow mb-6 w-full max-w-full">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+            <thead className="bg-gray-100 dark:bg-gray-700">
+              <tr>
+                {columns.map((col) => (
+                  <th
+                    key={col}
+                    className="px-4 py-2 text-left font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap"
+                  >
+                    {col.charAt(0).toUpperCase() + col.slice(1)}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-800">
+              {sessionEarnings.map((row, idx) => (
+                <tr
+                  key={idx}
+                  className="hover:bg-green-50 dark:hover:bg-gray-700 transition"
+                >
+                  {columns.map((col) => (
+                    <td
+                      key={col}
+                      className="px-4 py-2 text-gray-900 dark:text-white"
+                    >
+                      {row[col]}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      {/* Monthly Earnings Chart */}
       <div className="bg-gray-800 p-6 rounded-xl shadow">
         <h3 className="text-xl font-semibold mb-4">
           Monthly Earnings Overview
