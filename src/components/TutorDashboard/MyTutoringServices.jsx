@@ -102,28 +102,29 @@ export default function MyTutoringServices() {
   };
 
   return (
-    <div className="p-6 min-h-screen bg-white dark:bg-gray-900">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white drop-shadow-lg">
+    <div className="p-3 sm:p-6 min-h-screen bg-transparent">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4 sm:gap-0">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white drop-shadow-lg">
           My Tutoring Services
         </h2>
         <motion.button
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.96 }}
           onClick={handleAdd}
-          className="flex items-center gap-2 bg-gradient-to-r from-green-400 to-green-600 px-5 py-2 rounded-xl shadow-lg hover:from-green-500 hover:to-green-700 transition font-semibold text-lg text-white cursor-pointer"
+          className="flex items-center gap-2 bg-gradient-to-r from-green-400 to-green-600 px-4 sm:px-5 py-2 rounded-xl shadow-lg hover:from-green-500 hover:to-green-700 transition font-semibold text-base sm:text-lg text-white cursor-pointer"
         >
-          <PlusCircle size={22} />
-          Add Tutoring Service
+          <PlusCircle size={20} className="sm:hidden" />
+          <PlusCircle size={22} className="hidden sm:inline" />
+          <span className="hidden xs:inline">Add Tutoring Service</span>
         </motion.button>
       </div>
       {loading && <Spinner size="lg" />}
       {error && (
-        <div className="text-red-600 dark:text-red-400 mb-4 font-semibold text-lg">
+        <div className="text-red-600 dark:text-red-400 mb-4 font-semibold text-base sm:text-lg">
           {error}
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
         <AnimatePresence>
           {services.map((service) => (
             <motion.div
@@ -133,9 +134,9 @@ export default function MyTutoringServices() {
               exit={{ opacity: 0, y: 40 }}
               transition={{ type: "spring", stiffness: 120, damping: 18 }}
             >
-              <CardContainer className="hover:shadow-2xl group">
-                <CardBody className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl overflow-hidden relative flex flex-col h-full">
-                  <div className="relative h-44 w-full rounded-xl overflow-hidden mb-4">
+              <CardContainer className="hover:shadow-2xl group h-full">
+                <CardBody className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl overflow-hidden relative flex flex-col h-full p-3 sm:p-5">
+                  <div className="relative h-32 sm:h-44 w-full rounded-xl overflow-hidden mb-3 sm:mb-4">
                     <img
                       src={service.banner_photo}
                       alt={
@@ -145,25 +146,25 @@ export default function MyTutoringServices() {
                     />
                   </div>
                   <CardItem>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-1 sm:mb-2">
                       <BookOpen
                         className="text-blue-500 dark:text-blue-300"
-                        size={20}
+                        size={18}
                       />
-                      <span className="text-lg font-bold text-gray-900 dark:text-white">
+                      <span className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
                         {service.category?.name || "Tutoring"}
                       </span>
                     </div>
-                    <div className="text-xl font-semibold mb-1 text-gray-900 dark:text-white">
+                    <div className="text-base sm:text-xl font-semibold mb-1 text-gray-900 dark:text-white break-words">
                       {service.description}
                     </div>
                   </CardItem>
                   <CardItem>
-                    <div className="flex flex-col gap-1 text-gray-800 dark:text-gray-200 text-sm">
+                    <div className="flex flex-col gap-1 text-gray-800 dark:text-gray-200 text-xs sm:text-sm">
                       <div className="flex items-center gap-2">
                         <BadgeDollarSign
                           className="text-green-500 dark:text-green-300"
-                          size={18}
+                          size={16}
                         />
                         <span className="font-bold">Rate:</span>
                         <span className="text-green-700 dark:text-green-200">
@@ -173,7 +174,7 @@ export default function MyTutoringServices() {
                       <div className="flex items-center gap-2">
                         <Phone
                           className="text-blue-600 dark:text-blue-300"
-                          size={18}
+                          size={16}
                         />
                         <span className="font-bold">Phone:</span>
                         <span>{service.phone_number}</span>
@@ -182,7 +183,7 @@ export default function MyTutoringServices() {
                         <div className="flex items-center gap-2">
                           <University
                             className="text-blue-600 dark:text-blue-300"
-                            size={18}
+                            size={16}
                           />
                           <span className="font-bold">University:</span>
                           <span>{service.university}</span>
@@ -190,7 +191,7 @@ export default function MyTutoringServices() {
                       )}
                     </div>
                   </CardItem>
-                  <div className="flex gap-3 mt-auto pt-4">
+                  <div className="flex gap-2 sm:gap-3 mt-auto pt-3 sm:pt-4">
                     <motion.button
                       whileHover={{ scale: 1.15, backgroundColor: "#2563eb" }}
                       whileTap={{ scale: 0.95 }}
@@ -200,7 +201,7 @@ export default function MyTutoringServices() {
                       type="button"
                       style={{ cursor: "pointer" }}
                     >
-                      <Pencil size={20} />
+                      <Pencil size={18} />
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.15, backgroundColor: "#dc2626" }}
@@ -211,7 +212,7 @@ export default function MyTutoringServices() {
                       type="button"
                       style={{ cursor: "pointer" }}
                     >
-                      <Trash2 size={20} />
+                      <Trash2 size={18} />
                     </motion.button>
                   </div>
                 </CardBody>
